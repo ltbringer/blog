@@ -8,7 +8,7 @@ tags:
     - calligraphy
 ---
 # Humble Beginnings
-This year around February mid, I was introduced to [mountainofink.com](https://www.mountainofink.com/). The blog itself is aesthetically pleasing and my friend happened to show me a collection of inks with passion I barely understood but it stirred out a memory that I didn't think I'll revisit. You may remember it as a _satisfying_ gif on popular social media.
+This year around February mid, I was introduced to [mountainofink.com](https://www.mountainofink.com/). The blog itself is aesthetically pleasing and my friend happened to show me a collection of inks with passion I barely understood, but it stirred out a memory that I didn't think I'll revisit. You may remember it as a _satisfying_ gif on popular social media.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ihbsJMjIFD0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 

@@ -3,7 +3,7 @@ date: 2020-04-2020
 title: "Reanimation"
 cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
 categories:
-    - neuroscience
+    - readings
 tags:
     - neuroscience
 ---
