@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import styles from './PostsListing.module.scss'
+import PostTags from '../components/PostTags'
+import postStyles from '../components/PostTags.module.scss'
 
 const PostListing = ({ postEdges }) => {
   const getPostList = () => {
@@ -34,6 +36,9 @@ const PostListing = ({ postEdges }) => {
                 &mdash; {post.timeToRead} Min Read{' '}
               </div>
               <p>{post.excerpt}</p>
+              <div className={postStyles.postMeta}>
+                <PostTags tags={post.tags} />
+              </div>
             </div>
           </article>
         </Link>
