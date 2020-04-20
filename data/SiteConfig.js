@@ -3,7 +3,7 @@ const config = {
   siteTitleShort: 'ltbringer', // Short site title for homescreen (PWA). Preferably should be under 12 characters to prevent truncation.
   siteTitleAlt: 'ltbringer/blog', // Alternative site title for SEO.
   siteLogo: '/logos/logo-1024.png', // Logo used for SEO and manifest.
-  siteUrl: 'https://ltbringer.github.io/blog', // Domain of your website without pathPrefix.
+  siteUrl: 'https://ltbringer.github.io', // Domain of your website without pathPrefix.
   pathPrefix: '/blog', // Prefixes all links. For cases when deployed to example.github.io/gatsby-advanced-starter/.
   siteDescription:
     'Programming|Art|Readings|Experiments.', // Website description used for RSS feeds/meta description tag.
