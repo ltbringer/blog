@@ -20,4 +20,6 @@ What happens when producers try to fill the buffer while consumers are simultane
 
 <iframe height="900px" width="100%" src="https://repl.it/@amreshvenugopal/DemandingQuestionablePhp?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
 
-The detail is in the wait over `while(buffer.isEmpty)` in the implementation of `Consumer` so if the current `thread` is active, and `buffer` is not empty, only then is a `consumer` allowed to read off the `buffer`.
+The detail is in the wait over `while(buffer.isEmpty)` in the implementation of `Consumer` so if the current `thread` is active, and `buffer` is not empty, only then is a `consumer` allowed to read off the `buffer.
+
+*to be continued...*
