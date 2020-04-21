@@ -1,5 +1,5 @@
 ---
-date: 2020-04-2020
+date: 2020-04-20
 title: "Thread Communication simulation"
 cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
 categories:

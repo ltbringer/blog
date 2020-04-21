@@ -1,5 +1,5 @@
 ---
-date: 2020-04-2020
+date: 2020-04-20
 title: "Negative labels for classification"
 cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
 categories:
