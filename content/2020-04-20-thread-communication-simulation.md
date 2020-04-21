@@ -8,8 +8,6 @@ tags:
     - scala
     - parallel
 ---
-
-# Setup
 Let's say we have: 
 
 1. A buffer of limited size.

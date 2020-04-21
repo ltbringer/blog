@@ -7,7 +7,6 @@ categories:
 tags:
     - machine learning
 ---
-# Intuition 
 Solving a classification problem has a standard approach to it. Acquire lots of labelled data. Hand it to a simple neural network and watch gradient descent do the work. But this is not enough, at least not when real world gets involved. There are data points with signals too feeble to picked without human intervention. One of those cases is **negation**.
 
 > Okay, I'll turn the lights on. <cite>robots</cite>
@@ -16,7 +15,7 @@ Solving a classification problem has a standard approach to it. Acquire lots of 
 
 > Sure, almost done. <cite>robots</cite>
 
-# Background
+## Background
 The questions we must ask to handle queries are: 
 
 - "What is the subject of the conversation?"

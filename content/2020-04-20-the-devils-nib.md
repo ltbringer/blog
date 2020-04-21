@@ -7,7 +7,6 @@ categories:
 tags:
     - calligraphy
 ---
-# Humble Beginnings
 This year around February mid, I was introduced to [mountainofink.com](https://www.mountainofink.com/). The blog itself is aesthetically pleasing and my friend happened to show me a collection of inks with passion I barely understood, but it stirred out a memory that I didn't think I'll revisit. You may remember it as a _satisfying_ gif on popular social media.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ihbsJMjIFD0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -20,7 +19,7 @@ I remember watching this longer than I'd like to admit, something about the symm
 3. Artangle The Almond Branches By Vincent Van Gogh Hardcover Plain A5 Size Premium Notebook (190 gsm sheets)
 4. KABEER ART Dip Pen Oblique Calligraphy Pen Holder Set Of 1 (Nib Holder)
 
-### Fooling around
+## Fooling around
 I like the humour in cyanide and happiness comics. Here is an attempt at drawing the following comic. The tines of this pen
 are hard to control. Although nothing that practice can't solve, I wish I had a platform to post hobby work to keep me closer 
 to the early struggles and improvements of future.
