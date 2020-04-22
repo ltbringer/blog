@@ -31,4 +31,4 @@ Charges can be positive or negative depending on the presence of electrons in th
 ## Building charges
 Let's take a situation of neurons now. If the concentration of say, $Na^{+}$ ions inside the neuron is $200 mM$ while outside the concentration is $10mM$, then diffusion will cause $Na^{+}$ ions to move outside. It should be easy to follow that this will cause the outside of the neuron to slowly get more positively charged. Eventually more charges won't be able to escape from within the neuron because the electrostatic forces will repel the positively charged ions.
 
-[!diffusion img](./images/diffusion.jpg)
+![diffusion img](./images/diffusion.gif)
