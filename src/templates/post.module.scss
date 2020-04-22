@@ -4,6 +4,14 @@
     font-size: 0.7rem;
 }
 
+p {
+    margin: 1rem 0;
+}
+
+hr {
+    margin: calc(1.5rem - 1px) 0;
+}
+
 .pagination {
     display: flex;
     flex-wrap: wrap;
