@@ -8,7 +8,8 @@ import SocialLinks from '../components/SocialLinks'
 import SEO from '../components/SEO'
 import config from '../../data/SiteConfig'
 import styles from './post.module.scss'
-import './prism-okaidia.css'
+import './prism-material-light.css'
+import './katex.min.css'
 
 export default ({ data, pageContext }) => {
   const { slug, nexttitle, nextslug, prevtitle, prevslug } = pageContext
