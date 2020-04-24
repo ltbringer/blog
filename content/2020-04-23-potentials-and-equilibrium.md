@@ -1,6 +1,6 @@
 ---
 date: 2020-04-23
-title: "Resting potential"
+title: "The Resting potential"
 cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
 categories:
     - readings
@@ -31,6 +31,13 @@ Charges can be positive or negative depending on the presence of electrons in th
 ![Fig: Electrostatic effects prevent movement across the ion channel](./images/electrostatics-and-k-plus-ions.jpg)
 
 ## Building charges
-Let's take a situation of neurons now. If the concentration of say, $Na^{+}$ ions inside the neuron is $200 mM$ while outside the concentration is $10mM$, then diffusion will cause $Na^{+}$ ions to move outside. It should be easy to follow that this will cause the outside of the neuron to slowly get more positively charged. Eventually more charges won't be able to escape from within the neuron because the electrostatic forces will repel the positively charged ions.
+Let's assume a scenario, if the concentration of say, $K^{+}$ ions inside the neuron is $200 mM$ while outside the concentration is $10mM$, then diffusion will cause $K^{+}$ ions to move outside. This follows a more positive charge on the outside of the neuron's membrane. The movement is facilitated by ion channels, these ion channels have limited permeability which is different for different ions. 
 
+As the positive charge grows, it becomes harder for other ions to move out. (Refer to the comic in [Electrostatic Forces](#electrostatic-forces)), you can now imagine the two forces taking part in a tug of war. In terms of statistics, only 1 in 100,000 $K^{+}$ ions need to move out to reach equilibrium of these forces. This shows how much dominant is the electrostatic force over the force of diffusion.
 
+It is worth taking a note that the volume of ions on either side of the membrane don't drive the electrical potential of the neuron. The important bit is the concentration gradient. We can understand more from the **Nernst Equation**. **Nernst Equation** describes the electric potential, given the concentration of ions around the membrane. 
+
+## Nenst Equation
+$$
+E = \frac{RT}{zF}\ln{\frac{\text{ion } \text{concentration } \text{outside }}{\text{ion } \text{concentration } \text{inside}}}
+$$
