@@ -21,7 +21,7 @@ The questions we must ask to handle queries are:
 - "What is the subject of the conversation?"
 - "What is the intention of the speaker?"
 
-These questions have answers in *verbs* and *nouns*, the solutions for these become *Intent Classification* and *Entity Recognition. Reducing the sentence so recklessly only asks yet another question. 
+These questions have answers in *verbs* and *nouns*, the solutions for these become *Intent Classification* and *Entity Recognition*. Reducing the sentence so recklessly only asks yet another question. 
 
 If it meant the same to strip a sentence of everything that is not statistically dominant, why would humans converse with it? As feature engineers, we try to reduce a sentence into its bare minimum form. Pulling out signal from the noise. A lack of a rigorous approach makes it hard to justify which reductions are appropriate, also, are these reductions appropriate for the set of all sentences? even if these sentences strictly belong to the business requirement? Are business requirements as strict as they should be to answer these questions?
 
