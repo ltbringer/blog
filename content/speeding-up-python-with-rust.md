@@ -244,6 +244,187 @@ A whopping **1.36s** saved! That said, both numbers are painfully sad to the poi
 
 ## Slow patterns
 
-We did talk about our code being a sloppy $O(n^{2})$ but there is more a bigger culprit. If you use regular expressions a lot you probably noticed it a while back. Regular expression searches themselves are $O(n)$ to $O(n^{2})$ depending on the pattern and the engine. This might make them hard to fix, but there are hints. If your regular expression backtracks a lot, its going to hurt. Notice all the patterns we used had `.*` in them?
+We did talk about our code being a sloppy $O(n^{2})$ but there is more, a bigger culprit. If you use regular expressions a lot you probably noticed it a while back. Regular expression searches themselves are $O(n)$ to $O(n^{2})$ depending on the pattern and the engine. This might make them hard to fix, but there are hints. If your regular expression backtracks a lot, its going to hurt. Notice all the patterns we used had `.*` in them?
 
-`.*` makes it convenient to express things like, _give me anything that has THIS and THAT, I don't care about what's in between_. This gives the regex engine a hard time, `.*` is greedy and that means it matches everything till it reaches _THAT_, but when it doesn't, it goes back a step to check if the things that it matched to `.*` happen to be _THAT_. The longer the sentences the slower this gets. 
+`.*` makes it convenient to express things like, _give me anything that has THIS and THAT, I don't care about what's in between_. This gives the regex engine a hard time, `.*` is greedy and that means it matches everything till it reaches _THAT_, but when it doesn't, it goes back a step to check if the things that it matched to `.*` happen to be _THAT_. The longer the sentences the slower this gets.
+
+Let's try that out. The same patterns without `.*` but `\s` instead.
+```python
+In [55]: patterns = [r"change name",  
+    ...: r"change oil",  
+    ...: r"swap accent",  
+    ...: r"need change", 
+    ...: r"please change", 
+    ...: r"i need to change", 
+    ...: r"limit change", 
+    ...: r"change pin", 
+    ...: r"change tires?", 
+    ...: r"change credit limit", 
+    ...: r"language change", 
+    ...: r"change language", 
+    ...: r"pin change", 
+    ...: r"speed change", 
+    ...: r"change accent", 
+    ...: r"credit change", 
+    ...: r"insurance change", 
+    ...: r"oil change", 
+    ...: r"change speed", 
+    ...: r"how change", 
+    ...: r"when change", 
+    ...: r"why change"]
+```
+Before we go ahead with these, let's see how our previous patterns fared in terms of results.
+```python
+{'insurance_change': 13,
+ 'change_language': 13,
+ 'change_user_name': 18,
+ 'oil_change_how': 175,
+ 'next_song': 1,
+ 'oil_change_when': 210,
+ 'reminder': 3,
+ 'change_speed': 8,
+ 'schedule_maintenance': 41,
+ 'todo_list': 2,
+ 'change_accent': 27,
+ 'tire_change': 88,
+ 'exchange_rate': 14,
+ 'pin_change': 75,
+ 'last_maintenance': 47,
+ 'measurement_conversion': 4,
+ 'taxes': 1,
+ 'cancel': 1,
+ 'reset_settings': 1,
+ 'credit_limit_change': 16,
+ 'change_ai_name': 50}
+```
+Don't worry about the numbers, we allowed the same sentence to match against different patterns so the count can cross the original class limits. It looks like these patterns while slow did a decent job, only a few matches are out of the expected classes, with minor frequency. We'll see how the modified pattern's fare in terms of speed and accuracy.
+
+```python
+{'insurance_change': 1,
+ 'change_language': 9,
+ 'change_user_name': 5,
+ 'oil_change_how': 20,
+ 'next_song': 1,
+ 'oil_change_when': 64,
+ 'reminder': 1,
+ 'change_speed': 2,
+ 'schedule_maintenance': 25,
+ 'todo_list': 2,
+ 'change_accent': 8,
+ 'tire_change': 8,
+ 'pin_change': 9,
+ 'last_maintenance': 18,
+ 'reset_settings': 1,
+ 'credit_limit_change': 6,
+ 'change_ai_name': 6}
+```
+These patterns are sparingly selective about the sentences. We will simulated a large number of patterns to compare with the previous. Let's see how slower is that, for the sake of bervity we will assume plots from compiled patterns.
+
+![Fig. Icicle plot showing performance of patterns with .* removed](./images/pattern_experiment_icicle_5.png)
+
+That's not a lot of boost? A gain of 13ms is trivial when the overall time is over 3 seconds.
+
+> TODO: Spend more time knowing why the gain is tiny.
+
+## Compile time speed boost
+There is still something we can do about programs that are slow. We can port our logic to a compiled language. Since python is dynamically typed it has to make assumptions about the data, this could be slow when performing compute intensive logic. This is where languages like C, C++, Go, Rust shine. I'll be picking Rust because of its unicode support and [pyo3](https://github.com/PyO3/pyo3) making it very easy to write wrappers around Rust code and presence of [maturin](https://github.com/PyO3/maturin) that allows shipping these wrappers as `pip` packages! Also the [regex](https://docs.rs/regex/1.3.7/regex/) Implementation has features missing in python, like [1](https://docs.rs/regex/1.3.7/regex/#example-avoid-compiling-the-same-regex-in-a-loop), [2](https://docs.rs/regex/1.3.7/regex/#example-match-multiple-regular-expressions-simultaneously) [3](https://docs.rs/regex/1.3.7/regex/#syntax) and [4](https://docs.rs/regex/1.3.7/regex/#crate-features).
+
+```rust
+// - Wrapper for python
+
+extern crate regex;
+
+use pyo3::prelude::*;
+use std::os::raw::c_double;
+use regex::Regex;
+
+
+#[pyclass]
+struct GroupRegexMatch {
+  compiled_patterns: Vec<Regex>,
+  intents: Vec<String>
+}
+
+#[pymethods]
+impl GroupRegexMatch {
+  #[new]
+  fn new(patterns: Vec<&str>, intents: Vec<String>) -> PyResult<GroupRegexMatch> {
+    let compiled_patterns: Vec<Regex> = patterns.into_iter()
+        .map(|pattern| Regex::new(pattern).unwrap())
+        .collect();
+    Ok(GroupRegexMatch { compiled_patterns, intents })
+  }
+
+  fn search(&self, texts: Vec<&str>) -> PyResult<Vec<f64>> {
+    Ok(self.compiled_patterns.iter()
+      .map(|pattern| {
+        let scores: Vec<f64> = texts.iter()
+          .map(|text| {
+            match pattern.find(text) {
+              None => 0.0,
+              Some(mat) => ((mat.end() - mat.start())
+                as c_double / text.len() as c_double)
+            }
+          }).collect();
+
+        let non_zero_scores: Vec<f64> = scores.iter()
+          .cloned()
+          .filter(|score| score > &0.0)
+          .collect();
+
+        let max_score: f64 = non_zero_scores.iter()
+          .cloned()
+          .fold(-1./0., f64::max);
+
+        let score = -1.0 * (non_zero_scores.len() as f64) * max_score;
+        let e_to_score = score.exp();
+        let score_sigmoid: f64 = if non_zero_scores.len() > 0 { 1. / (1. + e_to_score) } else { 0. };
+        score_sigmoid
+      }).collect())
+  }
+}
+
+
+#[pymodule]
+fn exegr(_py: Python, m: &PyModule) -> PyResult<()> {
+  m.add_class::<GroupRegexMatch>()?;
+  Ok(())
+}
+```
+(A lot of code above won't be explained in this post as it is not the goal of this post to explain Rust programming or creating python bindings from Rust. 
+The code is shared for the purposes of reproducing results.)
+
+We have a Rust `struct` which is instantiated with patterns and intent labels. It exposes a search method on the instance which accepts a list of sentences
+and scores them with their span, vs length of the sentence. We need to build the binaries by running:
+
+```shell
+cargo build --release
+```
+
+This step produces `libexegr.so` because I named the package `exegr`, we can copy it as `exegr.so` into the directory we are running python code for testing and development. Once that is done,
+we can use it like any ordinary python library.
+
+```python
+from exegr import GroupRegexMatch
+```
+We will also modify our function `match_regex` to use this new library.
+
+```python
+# - 
+In [34]: g = GroupRegexMatch(patterns, labels)
+
+In [35]: def match_rustic(items): 
+    ...:     matches = [] 
+    ...:     scores = [] 
+    ...:     for item in items: 
+    ...:         score = sum(g.search([item[0]])) 
+    ...:         if score > 0: 
+    ...:             matches.append(item) 
+    ...:             scores.append(score) 
+    ...:     return matches, scores 
+```
+We pass each sentence one at a time and the library returns a list with scores for each pattern. If we see a non-zero score, we pick it (as we have been doing). We could pass multiple sentences but we aren't as we want them to be scored separately. This feature of accepting multiple sentences is for ASR outputs which generally produce multiple utterances that need to be used. Let's see how this works.
+
+![Fig. Icicle plot of program ported to Rust and used via python bindings](./images/pattern_experiment_icicle_6.png)
+
+Yes, I ran this with all 440 patterns and we get down to **38ms**. This is much lesser than python's implementation using 21 patterns to yield results in **200ms**.
