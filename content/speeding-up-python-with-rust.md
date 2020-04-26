@@ -348,11 +348,11 @@ struct GroupRegexMatch {
 #[pymethods]
 impl GroupRegexMatch {
   #[new]
-  fn new(patterns: Vec<&str>, intents: Vec<String>) -> PyResult<GroupRegexMatch> {
+  fn new(patterns: Vec<&str>) -> PyResult<GroupRegexMatch> {
     let compiled_patterns: Vec<Regex> = patterns.into_iter()
         .map(|pattern| Regex::new(pattern).unwrap())
         .collect();
-    Ok(GroupRegexMatch { compiled_patterns, intents })
+    Ok(GroupRegexMatch { compiled_patterns })
   }
 
   fn search(&self, texts: Vec<&str>) -> PyResult<Vec<f64>> {
@@ -391,10 +391,12 @@ fn exegr(_py: Python, m: &PyModule) -> PyResult<()> {
   Ok(())
 }
 ```
+You can access the config from the original repository [here](https://github.com/ltbringer/exegr)
+
 (A lot of code above won't be explained in this post as it is not the goal of this post to explain Rust programming or creating python bindings from Rust. 
 The code is shared for the purposes of reproducing results.)
 
-We have a Rust `struct` which is instantiated with patterns and intent labels. It exposes a search method on the instance which accepts a list of sentences
+We have a Rust `struct` which is instantiated with patterns. It exposes a search method on the instance which accepts a list of sentences
 and scores them with their span, vs length of the sentence. We need to build the binaries by running:
 
 ```shell
@@ -411,7 +413,7 @@ We will also modify our function `match_regex` to use this new library.
 
 ```python
 # - 
-In [34]: g = GroupRegexMatch(patterns, labels)
+In [34]: g = GroupRegexMatch(patterns)
 
 In [35]: def match_rustic(items): 
     ...:     matches = [] 
@@ -428,3 +430,5 @@ We pass each sentence one at a time and the library returns a list with scores f
 ![Fig. Icicle plot of program ported to Rust and used via python bindings](./images/pattern_experiment_icicle_6.png)
 
 Yes, I ran this with all 440 patterns and we get down to **38ms**. This is much lesser than python's implementation using 21 patterns to yield results in **200ms**.
+
+_fin._
