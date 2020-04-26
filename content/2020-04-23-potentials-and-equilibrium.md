@@ -37,7 +37,7 @@ As the positive charge grows, it becomes harder for other ions to move out. (Ref
 
 It is worth taking a note that the volume of ions on either side of the membrane don't drive the electrical potential of the neuron. The important bit is the concentration gradient. We can understand more from the **Nernst Equation**. **Nernst Equation** describes the electric potential, given the concentration of ions around the membrane. 
 
-## Nenst Equation
+## Nernst Equation
 $$
 E = \frac{RT}{zF}\ln{\frac{\text{ion } \text{concentration } \text{outside }}{\text{ion } \text{concentration } \text{inside}}}
 $$
