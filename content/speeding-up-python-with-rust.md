@@ -182,7 +182,7 @@ Here we are looking at the data of a smart-home device. Devices that should answ
 usually getting nothing more than a second's leeway for replying back which has more things to compute than just the `intent`. It has to probably call an API, embed words into a 
 response template and then convert that text to speech. All under **1s**. Can we afford to have a single step of pre-processing take **200ms**?
 
-## Hammers and Pickaxes
+## Hammers and Pick-axes
 Let's try to identify what is making things slow. We'll use `snakeviz` and `cProfile` for that.
 
 ```
@@ -190,23 +190,60 @@ pip install snakeviz
 ```
 and inspect around the function to see what can we do about it.
 ```python
-In [19]: import cProfile                                                                          
+In [19]: import cProfile
 
-In [20]: pr = cProfile.Profile()                                                                  
-
-In [21]: def monitor(): 
+In [20]: def monitor(f, *args): 
+    ...:     pr = cProfile.Profile()
     ...:     pr.enable() 
-    ...:     matches, scores = match_change(training_data, patterns) 
+    ...:     matches, scores = f(*args) 
     ...:     pr.disable() 
     ...:     pr.dump_stats("program.prof") 
     
-In [22]: monitor()
+In [21]: monitor(match_change, patterns)
 ```
 The profiler saves the inspection results in `program.prof` this can be used by snakeviz to give helpful visualizations.
 ```
 snakeviz /path/to/program.prof
 ```
 I see this plot on my machine:
-![Fig. Icicle plot of program performance](./images/pattern_experiment_icicle.png)
+![Fig. Icicle plot of program performance (click to zoom)](./images/pattern_experiment_icicle.png)
 
 According to this we spend 201ms for `re.search` and 71ms for `re.compile`. Let's try to pre-compile our patterns and check the results.
+
+```python
+In [30]: compiled_patterns = [re.compile(pattern, flags=re.I) for pattern in patterns] 
+
+In [31]: def match_change(items, patterns): 
+    ...:     matches = [] 
+    ...:     scores = [] 
+    ...:     for item in items: 
+    ...:         for pattern in compiled_patterns: # Swap the variable
+    ...:             sentence = item[0] 
+    ...:             match = pattern.search(sentence) # Change the API
+    ...:             if match: 
+    ...:                 matches.append(item) 
+    ...:                 scores.append((match.end() - match.start())) 
+    ...:     return matches, scores 
+
+```
+Line [30] has an additional `flags=re.I` thrown in, we would need it to do case insensitive searches. Let's see how much this change helps. It shouldn't do much because we only lost 70ms to it.
+![Fig. Icicle plot after pre-compiling patterns (click to zoom)](./images/pattern_experiment_icicle_2.png)
+
+As expected this isn't a huge change, but let's not underestimate it as well. This is a change that scales. What if we had 100s of patterns? taking 4 patterns per-intent leads us to `4 x 150 = 600` Patterns.
+Let's simulate with 400 patterns and compare the results, both with and without pre-compilation. Let's simulate some patterns:
+
+```python
+patterns = patterns * 20 # We have 440 patterns now.
+```
+We recalculate compiled_patterns as well to keep it fair.
+
+![Fig. Icicle plot showing performance of program with 440 un-compiled patterns](./images/pattern_experiment_icicle_3.png)
+![Fig. Icicle plot showing performance of program with 440 pre-compiled patterns](./images/pattern_experiment_4.png)
+
+A whopping **1.36s** saved! That said, both numbers are painfully sad to the point of being unusable or at least frustrating. This could mean around **7s to 10s** of total response from a smart-home device. That wouldn't be _very smart_.
+
+## Slow patterns
+
+We did talk about our code being a sloppy $O(n^{2})$ but there is more a bigger culprit. If you use regular expressions a lot you probably noticed it a while back. Regular expression searches themselves are $O(n)$ to $O(n^{2})$ depending on the pattern and the engine. This might make them hard to fix, but there are hints. If your regular expression backtracks a lot, its going to hurt. Notice all the patterns we used had `.*` in them?
+
+`.*` makes it convenient to express things like, _give me anything that has THIS and THAT, I don't care about what's in between_. This gives the regex engine a hard time, `.*` is greedy and that means it matches everything till it reaches _THAT_, but when it doesn't, it goes back a step to check if the things that it matched to `.*` happen to be _THAT_. The longer the sentences the slower this gets. 
