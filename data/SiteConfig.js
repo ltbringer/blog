@@ -18,8 +18,7 @@ const config = {
   userGitHub: 'ltbringer', // Optionally renders "Follow Me" in the Bio segment.
   userLocation: 'Bengaluru, India', // User location to display in the author segment.
   userAvatar: 'https://en.gravatar.com/userimage/98336504/0b970a90b5c7b72a55ac285fa3711195.jpg', // User avatar to display in the author segment.
-  userDescription:
-    "Self taught developer, still teaching self. [content pending]", // User description to display in the author segment.
+  userDescription: "", // User description to display in the author segment.
   copyright: 'Copyright © 2020. All rights reserved.', // Copyright string for the footer of the website and RSS feed.
   themeColor: '#c62828', // Used for setting manifest and progress theme colors.
   backgroundColor: 'red' // Used for setting manifest background color.
