@@ -1,6 +1,6 @@
 import React from 'react'
 import Helmet from 'react-helmet'
-import { graphql, Link } from 'gatsby'
+import { graphql, Link, withPrefix } from 'gatsby'
 import Layout from '../layout'
 import Bio from '../components/Bio'
 import PostTags from '../components/PostTags'
@@ -21,7 +21,19 @@ export default ({ data, pageContext }) => {
   }
   return (
     <Layout>
-      <main>
+      <main ref={elem => {
+        const scriptElem = document.createElement("script")
+        scriptElem.src = "https://utteranc.es/client.js";
+        scriptElem.async = true;
+        scriptElem.crossOrigin = "anonymous";
+        scriptElem.setAttribute("repo", "ltbringer/blog");
+        scriptElem.setAttribute("issue-term", "pathname");
+        scriptElem.setAttribute("label", "blog-comments");
+        scriptElem.setAttribute("theme", "github-light");
+          if (elem) {
+              elem.appendChild(scriptElem)
+          }
+      }}>
         <Helmet>
           <title>{`${post.title} | ${config.siteTitle}`}</title>
         </Helmet>
