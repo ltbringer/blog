@@ -10,6 +10,7 @@ import config from '../../data/SiteConfig'
 import styles from './post.module.scss'
 import './prism-material-light.css'
 import './katex.min.css'
+import './katex-override.css'
 
 export default ({ data, pageContext }) => {
   const { slug, nexttitle, nextslug, prevtitle, prevslug } = pageContext

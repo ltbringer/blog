@@ -30,3 +30,15 @@
         position: relative;
     }
 }
+
+@media (max-width: 400px) {
+    .social-links {
+        position: relative;
+        left: 0;
+    }
+
+    .social-links div {
+        display: inline-grid;
+        position: relative;
+    }
+}
