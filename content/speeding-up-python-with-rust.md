@@ -4,6 +4,7 @@ title: "Regular expressions and efficiency"
 cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
 categories:
     - programming
+    - experiments
 tags:
     - rust
     - python
