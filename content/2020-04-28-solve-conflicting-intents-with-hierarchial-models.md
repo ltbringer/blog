@@ -321,7 +321,7 @@ In [39]: def create_label_correlation(st=10):
      ...:                     correlation.append((alabel, otherlabel, corr, diff)) 
      ...:     return correlation
 
-In [524]: print(tabulate(py_.chunk(correlation, 3)))
+In [40]: print(tabulate(py_.chunk(correlation, 3)))
 
 -------------------------------------------------------  ----------------------------------------------------------  ------------------------------------------------------------
 ('recipe', 'ingredients_list', 66, 408)                  ('confirm_reservation', 'restaurant_reservation', 60, 269)  ('accept_reservations', 'restaurant_reviews', 46, 408)
@@ -396,6 +396,79 @@ In [524]: print(tabulate(py_.chunk(correlation, 3)))
 
 That looks decent. We have all these overlapping labels but all of them seem to have sufficient vocab to distinguish from each other on a _one-on-one_ basis.
 
+We can also create unique vocab for each label like so:
+
+```python
+In [41]: def create_label_vocab(): 
+     ...:     label_vocab = [] 
+     ...:     for i in tqdm(range(len(labels))): 
+     ...:         alabel = labels[i] 
+     ...:         vocab = copy.deepcopy(label_vocab_map[alabel]) 
+     ...:         for j in range(i, len(labels)): 
+     ...:             otherlabel = labels[j] 
+     ...:             if alabel != otherlabel: 
+     ...:                 vocab = vocab.difference(label_vocab_map[otherlabel]) 
+     ...:         if vocab: 
+     ...:             label_vocab.append((alabel, len(vocab))) 
+     ...:     return label_vocab 
+
+In [42]: print(tabulate(py_.chunk(sorted(label_vocab, key=lambda el: el[1], reverse=True), 3)))              
+----------------------------------  ----------------------------  --------------------------------
+('oos', 359)                        ('book_hotel', 260)           ('ingredient_substitution', 242)
+('restaurant_suggestion', 230)      ('play_music', 208)           ('cook_time', 195)
+('recipe', 189)                     ('accept_reservations', 181)  ('book_flight', 173)
+('update_playlist', 172)            ('fun_fact', 168)             ('insurance_change', 164)
+('ingredients_list', 156)           ('spelling', 154)             ('restaurant_reviews', 151)
+('calendar_update', 149)            ('calculator', 147)           ('definition', 141)
+('distance', 136)                   ('transfer', 128)             ('plug_type', 127)
+('cancel_reservation', 127)         ('food_last', 126)            ('shopping_list_update', 123)
+('traffic', 123)                    ('travel_notification', 122)  ('calories', 120)
+('text', 119)                       ('weather', 119)              ('todo_list_update', 116)
+('damaged_card', 116)               ('international_fees', 113)   ('directions', 110)
+('share_location', 109)             ('vaccines', 107)             ('report_fraud', 105)
+('carry_on', 104)                   ('meal_suggestion', 104)      ('application_status', 103)
+('replacement_card_duration', 103)  ('exchange_rate', 102)        ('balance', 100)
+('credit_limit_change', 99)         ('how_busy', 98)              ('todo_list', 96)
+('restaurant_reservation', 95)      ('card_declined', 94)         ('uber', 93)
+('reminder_update', 91)             ('spending_history', 90)      ('gas_type', 90)
+('rewards_balance', 89)             ('change_ai_name', 89)        ('report_lost_card', 89)
+('car_rental', 88)                  ('confirm_reservation', 88)   ('travel_alert', 87)
+('routing', 86)                     ('transactions', 85)          ('measurement_conversion', 85)
+('interest_rate', 83)               ('timezone', 82)              ('tire_pressure', 81)
+('expiration_date', 80)             ('improve_credit_score', 79)  ('lost_luggage', 78)
+('time', 78)                        ('min_payment', 77)           ('income', 77)
+('international_visa', 76)          ('direct_deposit', 76)        ('pto_request', 75)
+('redeem_rewards', 75)              ('change_speed', 75)          ('translate', 74)
+('travel_suggestion', 74)           ('flight_status', 72)         ('nutrition_info', 71)
+('meeting_schedule', 71)            ('order', 71)                 ('make_call', 71)
+('schedule_meeting', 71)            ('jump_start', 69)            ('tell_joke', 69)
+('order_checks', 68)                ('pin_change', 67)            ('goodbye', 67)
+('whisper_mode', 67)                ('rollover_401k', 66)         ('bill_balance', 66)
+('apr', 65)                         ('account_blocked', 63)       ('new_card', 59)
+('who_made_you', 56)                ('change_language', 55)       ('change_accent', 55)
+('order_status', 54)                ('mpg', 53)                   ('last_maintenance', 52)
+('schedule_maintenance', 51)        ('calendar', 50)              ('reset_settings', 50)
+('meaning_of_life', 48)             ('current_location', 48)      ('smart_home', 47)
+('pto_balance', 47)                 ('insurance', 46)             ('freeze_account', 46)
+('pto_request_status', 46)          ('w2', 45)                    ('timer', 45)
+('taxes', 44)                       ('cancel', 43)                ('no', 43)
+('how_old_are_you', 43)             ('tire_change', 42)           ('shopping_list', 42)
+('reminder', 42)                    ('sync_device', 41)           ('greeting', 40)
+('thank_you', 40)                   ('pto_used', 40)              ('next_holiday', 39)
+('oil_change_how', 39)              ('roll_dice', 39)             ('flip_coin', 37)
+('pay_bill', 37)                    ('where_are_you_from', 37)    ('change_user_name', 36)
+('date', 36)                        ('alarm', 35)                 ('do_you_have_pets', 35)
+('bill_due', 35)                    ('credit_score', 34)          ('change_volume', 34)
+('what_are_your_hobbies', 34)       ('gas', 32)                   ('next_song', 31)
+('oil_change_when', 29)             ('credit_limit', 29)          ('yes', 26)
+('payday', 26)                      ('maybe', 25)                 ('are_you_a_bot', 24)
+('what_song', 23)                   ('what_can_i_ask_you', 19)    ('find_phone', 18)
+('repeat', 18)                      ('who_do_you_work_for', 10)   ('user_name', 9)
+('what_is_your_name', 7)
+----------------------------------  ----------------------------  --------------------------------
+```
+We have a good idea about the vocab that defines a vocab well. Let's see a few examples.
+
 Now let's think about a target sentence, we can build `(1, 3)` ngrams and check if they lie in our filtered vocabulary. Words that don't exist, will get replaced with an `OOV` token.
 
 ```python
@@ -412,3 +485,4 @@ def transform(sentence, vocabulary_set, max_ngram=3):
             transform.append("OOV")
     return transform
 ```
+
