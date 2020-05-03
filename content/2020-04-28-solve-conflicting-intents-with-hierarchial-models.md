@@ -136,18 +136,18 @@ In [13]: sentences, labels = zip(*training_data)
 
 In [14]: labels = list(set(labels))
 
-In [15]: tfm = tv.fit_transform(sentences) 
+In [15]: tfm = tfidf.fit_transform(sentences) 
 
-In [16]: vocabulary = tv.vocabulary_ 
+In [16]: vocabulary_ = tfidf.vocabulary_ 
 
-In [17]: len(vocabulary)                                                                                                                                                 
+In [17]: len(vocabulary_)                                                                                                                                                 
 Out[17]: 5092
 
-In [18]: vocabulary_set = set(vocabulary) 
+In [18]: vocabulary_set = set(vocabulary_) 
 
 In [19]: def make_label_maps():
      ...:     label_vocab_map = {}
-     ...:     for label, content in label_group.items():
+     ...:     for label, content in label_groups.items():
      ...:         label_vocab_map[label] = set()
      ...:         label_sentences, _ = zip(*content)
      ...:         for word in vocabulary_set:
@@ -167,14 +167,15 @@ In [21]: def create_label_correlation(correlation_threshold=10):
      ...:             if alabel != otherlabel: 
      ...:                 score = len(label_vocab_map[alabel].intersection(label_vocab_map[otherlabel])) 
      ...:                 if score > correlation_threshold: 
-     ...:                     correlation.append((f"{alabel} and {otherlabel}", score)) 
+     ...:                     correlation.append((alabel, otherlabel, score)) 
      ...:     return correlation 
 
 In [22]: correlation = sorted(create_label_correlation(), key=lambda el: el[1], reverse=True)
 
 In [23]: len(correlation)                                                                                                                                                
 Out[23]: 11325
-``` 
+```
+
 _pardon the murder of functional concepts and poor programming for the sake of speed_
 
 That's a lot of data points to scan through! Let's try that again, let's include `ngram-range=(1,3)` in `TfidfVectorizer(stop_words="english", lowercase=True, ngram_range=(1,3))` and pruning vocabulary off words less than 3 characters. Also, we will use `correlation_threshold=40` `create_label_correlation`.
@@ -188,6 +189,7 @@ In [24]: correlation = sorted(create_label_correlation(40), key=lambda el: el[1]
 In [25]: len(correlation)                                                                          
 Out[26]: 127
 ```
+
 That's better, let's see what we have here.
 
 ```python
@@ -216,30 +218,6 @@ In [28]: print(tabulate(correlation_chunked))
 ('expiration_date and application_status', 49)         ('order_checks and direct_deposit', 48)                 ('report_fraud and transactions', 48)
 ('rewards_balance and apr', 48)                        ('directions and book_hotel', 48)                       ('nutrition_info and ingredients_list', 47)
 ('report_fraud and redeem_rewards', 47)                ('pin_change and interest_rate', 47)                    ('rewards_balance and balance', 47)
-('directions and uber', 47)                            ('directions and traffic', 47)                          ('todo_list and reminder', 47)
-('pay_bill and balance', 47)                           ('routing and direct_deposit', 46)                      ('pin_change and account_blocked', 46)
-('uber and traffic', 46)                               ('accept_reservations and confirm_reservation', 46)     ('accept_reservations and restaurant_reservation', 46)
-('book_flight and timezone', 46)                       ('international_fees and travel_alert', 46)             ('calories and ingredients_list', 46)
-('car_rental and restaurant_suggestion', 45)           ('pin_change and balance', 45)                          ('calories and food_last', 45)
-('calories and cook_time', 45)                         ('redeem_rewards and credit_limit', 45)                 ('plug_type and travel_notification', 45)
-('apr and expiration_date', 45)                        ('travel_notification and vaccines', 45)                ('lost_luggage and flight_status', 44)
-('pin_change and pay_bill', 44)                        ('rewards_balance and expiration_date', 44)             ('international_fees and credit_limit', 44)
-('calendar_update and book_hotel', 44)                 ('traffic and distance', 44)                            ('plug_type and travel_alert', 44)
-('pto_request_status and application_status', 44)      ('calendar and todo_list', 43)                          ('nutrition_info and cook_time', 43)
-('direct_deposit and pin_change', 43)                  ('accept_reservations and cancel_reservation', 43)      ('book_flight and travel_notification', 43)
-('international_fees and plug_type', 43)               ('redeem_rewards and new_card', 43)                     ('travel_alert and travel_notification', 43)
-('credit_limit and expiration_date', 43)               ('distance and book_hotel', 43)                         ('new_card and application_status', 43)
-('calendar and book_flight', 42)                       ('calendar and book_hotel', 42)                         ('report_fraud and credit_limit', 42)
-('routing and transfer', 42)                           ('rewards_balance and credit_limit_change', 42)         ('uber and book_hotel', 42)
-('book_flight and travel_suggestion', 42)              ('freeze_account and balance', 42)                      ('restaurant_reservation and book_hotel', 42)
-('bill_due and transactions', 42)                      ('apr and application_status', 42)                      ('order_checks and pay_bill', 41)
-('report_fraud and account_blocked', 41)               ('report_fraud and apr', 41)                            ('report_fraud and report_lost_card', 41)
-('routing and pin_change', 41)                         ('direct_deposit and balance', 41)                      ('rewards_balance and application_status', 41)
-('accept_reservations and how_busy', 41)               ('flight_status and book_flight', 41)                   ('book_flight and pto_request', 41)
-('confirm_reservation and restaurant_reviews', 41)     ('recipe and food_last', 41)                            ('redeem_rewards and transactions', 41)
-('plug_type and vaccines', 41)                         ('spending_history and transactions', 41)               ('bill_due and min_payment', 41)
-('credit_limit and interest_rate', 41)                 ('balance and transfer', 41)                            ('transactions and apr', 41)
-('interest_rate and apr', 41)
 -----------------------------------------------------  ------------------------------------------------------  ------------------------------------------------------
 ```
 We can see from label names that we have a reasonable confusion matter. Let's keep trying to solve for vocab with `len(word) >= 3`.
@@ -258,6 +236,7 @@ In [29]: def group_correlations(correlation):
 
 In [30]: correlated_group = group_correlations(correlation) 
 ```
+
 At this point for each intent we have easy to visualize overlaps but we can do better than this. So far we have only seen correlations, and not the 
 differences which could be useful. Let's try to see the most common words in the vocabulary.
 
@@ -273,11 +252,13 @@ In [30]: def create_label_blacklist():
      ...:                 blacklist.extend(list(label_vocab_map[alabel].intersection(label_vocab_map[otherlabel]))) 
      ...:     return blacklist
 
-In [31]: from collections import Counter                                                                                                                                 
+In [31]: blacklist_ctr = Counter(blacklist)   
 
-In [32]: blacklist_ctr = Counter(blacklist)
+In [32]: from collections import Counter                                                                                                                                 
 
-In [33]: blacklist_ctr.most_common(10)                                                                                                                                   Out[33]: 
+In [33]: blacklist_ctr = Counter(blacklist)
+
+In [34]: blacklist_ctr.most_common(10)                                                                                                                                   Out[33]: 
 [('need', 10296),
  ('nee', 10296),
  ('tel', 8385),
@@ -294,34 +275,38 @@ Discard the top 500 words from the vocab.
 
 ```python
 # - `if x not in ...` works faster on sets and dicts.
-In [34]: filter_vocab = set([w[0] for w in blacklist_ctr.most_common(500)]])
+In [34]: filter_vocab = set([w[0] for w in blacklist_ctr.most_common(500)])
 
-In [35]: vocabulary = [word for word in vocabulary_ if (word) >= 3 and word not in filter_vocab]
+In [35]: vocabulary = [word for word in vocabulary_ if len(word) >= 3 and word not in filter_vocab]
+
+In [36]: vocabulary_set = set(vocabulary)
+
+In [37]: label_vocab_map = make_label_maps()
 ```
 We still have **41983** words in vocabulary but a lot of common words are removed. We could also do this using `TfidfVectorizer`'s `max_df` param.
 
 ```python
 # Let's modify our correlation function to show the diff vocab as well
 
-In [36]: correlation = sorted(create_label_correlation(10), key=lambda el: el[2], reverse=True)
+In [38]: correlation = sorted(create_label_correlation(10), key=lambda el: el[2], reverse=True)
 
-In [37]: len(correlation)           
-Out[38]: 200
+In [39]: len(correlation)           
+Out[40]: 200
 
-In [39]: def create_label_correlation(st=10): 
-     ...:     correlation = [] 
-     ...:     for i in tqdm(range(len(labels))): 
-     ...:         alabel = labels[i] 
-     ...:         for j in range(i, len(labels)): 
-     ...:             otherlabel = labels[j] 
-     ...:             if alabel != otherlabel: 
-     ...:                 corr = len(label_vocab_map[alabel].intersection(label_vocab_map[otherlabel])) 
-     ...:                 diff = len(label_vocab_map[alabel].symmetric_difference(label_vocab_map[otherlabel])) 
-     ...:                 if score > st: 
-     ...:                     correlation.append((alabel, otherlabel, corr, diff)) 
-     ...:     return correlation
+In [41]: def create_label_correlation(threshold=10): 
+    ...:     correlation = [] 
+    ...:     for i in tqdm(range(len(labels))): 
+    ...:         alabel = labels[i] 
+    ...:         for j in range(i, len(labels)): 
+    ...:             otherlabel = labels[j] 
+    ...:             if alabel != otherlabel: 
+    ...:                 corr = len(label_vocab_map[alabel].intersection(label_vocab_map[otherlabel])) 
+    ...:                 diff = len(label_vocab_map[alabel].symmetric_difference(label_vocab_map[otherlabel])) 
+    ...:                 if corr > threshold: 
+    ...:                     correlation.append((alabel, otherlabel, corr, diff)) 
+    ...:     return correlation
 
-In [40]: print(tabulate(py_.chunk(correlation, 3)))
+In [42]: print(tabulate(py_.chunk(correlation, 3)))
 
 -------------------------------------------------------  ----------------------------------------------------------  ------------------------------------------------------------
 ('recipe', 'ingredients_list', 66, 408)                  ('confirm_reservation', 'restaurant_reservation', 60, 269)  ('accept_reservations', 'restaurant_reviews', 46, 408)
@@ -338,151 +323,74 @@ In [40]: print(tabulate(py_.chunk(correlation, 3)))
 ('uber', 'traffic', 26, 348)                             ('accept_reservations', 'restaurant_reservation', 26, 422)  ('calories', 'food_last', 26, 334)
 ('international_visa', 'travel_alert', 25, 239)          ('international_visa', 'travel_notification', 25, 250)      ('lost_luggage', 'carry_on', 25, 303)
 ('directions', 'uber', 25, 367)                          ('book_flight', 'pto_request', 25, 382)                     ('how_busy', 'restaurant_reviews', 25, 331)
-('ingredient_substitution', 'recipe', 25, 582)           ('nutrition_info', 'cook_time', 24, 322)                    ('recipe', 'food_last', 24, 450)
-('distance', 'book_hotel', 24, 480)                      ('rewards_balance', 'redeem_rewards', 23, 229)              ('directions', 'book_hotel', 23, 485)
-('confirm_reservation', 'restaurant_reviews', 23, 369)   ('traffic', 'distance', 23, 374)                            ('travel_suggestion', 'restaurant_suggestion', 23, 330)
-('book_hotel', 'restaurant_suggestion', 23, 496)         ('lost_luggage', 'flight_status', 22, 237)                  ('book_flight', 'timezone', 22, 379)
-('travel_notification', 'vaccines', 22, 225)             ('lost_luggage', 'book_flight', 21, 421)                    ('carry_on', 'flight_status', 21, 264)
-('uber', 'book_hotel', 21, 466)                          ('book_flight', 'distance', 21, 474)                        ('shopping_list_update', 'ingredient_substitution', 21, 467)
-('shopping_list_update', 'calories', 21, 361)            ('how_busy', 'confirm_reservation', 21, 328)                ('calendar_update', 'book_hotel', 21, 497)
-('travel_alert', 'vaccines', 21, 216)                    ('ingredients_list', 'food_last', 21, 358)                  ('todo_list_update', 'calendar_update', 20, 399)
-('credit_limit_change', 'transfer', 20, 237)             ('nutrition_info', 'ingredient_substitution', 19, 444)      ('shopping_list', 'shopping_list_update', 19, 242)
-('order', 'shopping_list_update', 19, 294)               ('accept_reservations', 'how_busy', 19, 417)                ('accept_reservations', 'cancel_reservation', 19, 387)
-('ingredient_substitution', 'food_last', 19, 454)        ('pto_request', 'travel_notification', 19, 244)             ('plug_type', 'travel_notification', 19, 294)
-('pto_request_status', 'application_status', 19, 160)    ('order_checks', 'routing', 18, 238)                        ('change_user_name', 'change_ai_name', 18, 150)
-('directions', 'traffic', 18, 387)                       ('book_flight', 'restaurant_suggestion', 18, 494)           ('shopping_list_update', 'food_last', 18, 339)
-('international_fees', 'travel_alert', 18, 281)          ('plug_type', 'vaccines', 18, 267)                          ('todo_list', 'reminder', 18, 198)
-('nutrition_info', 'shopping_list_update', 17, 331)      ('routing', 'balance', 17, 259)                             ('flight_status', 'book_flight', 17, 382)
-('how_busy', 'restaurant_reservation', 17, 321)          ('international_fees', 'plug_type', 17, 328)                ('confirm_reservation', 'schedule_meeting', 17, 263)
-('freeze_account', 'balance', 17, 218)                   ('ingredient_substitution', 'ingredients_list', 17, 500)    ('plug_type', 'travel_alert', 17, 287)
-('restaurant_reservation', 'schedule_meeting', 17, 248)  ('restaurant_reservation', 'book_hotel', 17, 464)           ('spending_history', 'transactions', 17, 234)
-('travel_alert', 'travel_notification', 17, 253)         ('balance', 'interest_rate', 17, 236)                       ('oos', 'fun_fact', 17, 584)
-('calendar', 'book_hotel', 16, 406)                      ('car_rental', 'pto_request', 16, 296)                      ('routing', 'transfer', 16, 245)
-('pin_change', 'account_blocked', 16, 199)               ('uber', 'book_flight', 16, 464)                            ('book_flight', 'travel_notification', 16, 416)
-('how_busy', 'cancel_reservation', 16, 274)              ('bill_due', 'min_payment', 16, 119)                        ('calendar', 'pto_request', 15, 230)
-('order_checks', 'interest_rate', 15, 221)               ('car_rental', 'travel_notification', 15, 314)              ('todo_list_update', 'reminder', 15, 259)
-('book_flight', 'calendar_update', 15, 497)              ('international_fees', 'timezone', 15, 273)                 ('international_fees', 'credit_limit', 15, 226)
-('confirm_reservation', 'book_hotel', 15, 483)           ('calendar_update', 'pto_request', 15, 331)                 ('bill_due', 'bill_balance', 15, 120)
-('credit_limit', 'apr', 15, 140)                         ('translate', 'change_language', 14, 218)                   ('international_visa', 'international_fees', 14, 302)
-('international_visa', 'timezone', 14, 247)              ('car_rental', 'distance', 14, 384)                         ('uber', 'restaurant_reservation', 14, 356)
-('yes', 'no', 14, 75)                                    ('book_flight', 'confirm_reservation', 14, 473)             ('how_busy', 'distance', 14, 357)
-('ingredient_substitution', 'cook_time', 14, 486)        ('restaurant_reviews', 'restaurant_reservation', 14, 372)   ('restaurant_reviews', 'book_hotel', 14, 496)
-('plug_type', 'timezone', 14, 279)                       ('calculator', 'credit_limit_change', 14, 299)              ('travel_alert', 'timezone', 14, 234)
-('timezone', 'distance', 14, 313)                        ('timezone', 'book_hotel', 14, 407)                         ('timezone', 'travel_notification', 14, 245)
-('balance', 'transfer', 14, 258)                         ('replacement_card_duration', 'report_lost_card', 14, 193)  ('book_hotel', 'travel_notification', 14, 432)
-('calendar', 'book_flight', 13, 400)                     ('share_location', 'text', 13, 353)                         ('car_rental', 'calendar_update', 13, 397)
-('todo_list_update', 'shopping_list_update', 13, 381)    ('routing', 'interest_rate', 13, 235)                       ('change_user_name', 'make_call', 13, 161)
-('pin_change', 'balance', 13, 247)                       ('rewards_balance', 'credit_limit', 13, 202)                ('schedule_maintenance', 'last_maintenance', 13, 145)
-('book_flight', 'travel_suggestion', 13, 418)            ('book_flight', 'restaurant_reservation', 13, 460)          ('international_fees', 'travel_notification', 13, 302)
-('damaged_card', 'replacement_card_duration', 13, 287)   ('traffic', 'weather', 13, 328)                             ('restaurant_reviews', 'cancel_reservation', 13, 325)
-('account_blocked', 'balance', 13, 234)                  ('new_card', 'application_status', 13, 186)                 ('translate', 'meal_suggestion', 12, 287)
-('share_location', 'change_ai_name', 12, 262)            ('exchange_rate', 'credit_limit_change', 12, 263)           ('text', 'make_call', 12, 280)
-('insurance', 'insurance_change', 12, 262)               ('car_rental', 'confirm_reservation', 12, 373)              ('shopping_list', 'calories', 12, 267)
-('routing', 'direct_deposit', 12, 233)                   ('routing', 'pin_change', 12, 240)                          ('rewards_balance', 'credit_limit_change', 12, 269)
-('uber', 'confirm_reservation', 12, 375)                 ('international_fees', 'vaccines', 12, 275)                 ('card_declined', 'spending_history', 12, 280)
-('time', 'timezone', 12, 220)                            ('calculator', 'transfer', 12, 296)                         ('meal_suggestion', 'travel_suggestion', 12, 279)
-('meal_suggestion', 'vaccines', 12, 254)                 ('calendar', 'car_rental', 11, 300)                         ('calendar', 'confirm_reservation', 11, 307)
-('exchange_rate', 'calculator', 11, 308)                 ('order_checks', 'direct_deposit', 11, 225)                 ('order_checks', 'balance', 11, 261)
-('report_fraud', 'report_lost_card', 11, 243)            ('car_rental', 'uber', 11, 370)                             ('todo_list_update', 'reminder_update', 11, 300)
-('carry_on', 'distance', 11, 384)                        ('update_playlist', 'oos', 11, 666)                         ('uber', 'oos', 11, 604)
-('flight_status', 'distance', 11, 312)                   ('book_flight', 'oos', 11, 706)                             ('international_fees', 'credit_limit_change', 11, 299)
-('confirm_reservation', 'pto_request', 11, 313)          ('confirm_reservation', 'make_call', 11, 286)               ('recipe', 'restaurant_reviews', 11, 510)
-('redeem_rewards', 'apr', 11, 195)                       ('restaurant_reviews', 'restaurant_suggestion', 11, 422)    ('todo_list', 'reminder_update', 11, 245)
-('pay_bill', 'balance', 11, 207)                         ('travel_suggestion', 'fun_fact', 11, 312)                  ('travel_suggestion', 'travel_notification', 11, 272)
-('travel_suggestion', 'vaccines', 11, 243)               ('restaurant_reservation', 'distance', 11, 382)             ('reminder', 'reminder_update', 11, 167)
-('distance', 'replacement_card_duration', 11, 325)       ('distance', 'cancel_reservation', 11, 333)
+...
 -------------------------------------------------------  ----------------------------------------------------------  ------------------------------------------------------------
 ```
 
 That looks decent. We have all these overlapping labels but all of them seem to have sufficient vocab to distinguish from each other on a _one-on-one_ basis.
 
-We can also create unique vocab for each label like so:
+We can have something even more useful. What if we could see label-level vocabulary? We could know the set of words that only exist for the label.def 
+
 
 ```python
-In [41]: def create_label_vocab(): 
-     ...:     label_vocab = [] 
+In [51]: def create_label_vocab(): 
+     ...:     label_vocab = {} 
      ...:     for i in tqdm(range(len(labels))): 
      ...:         alabel = labels[i] 
+     ...:         label_vocab[alabel] = None 
      ...:         vocab = copy.deepcopy(label_vocab_map[alabel]) 
      ...:         for j in range(i, len(labels)): 
      ...:             otherlabel = labels[j] 
      ...:             if alabel != otherlabel: 
      ...:                 vocab = vocab.difference(label_vocab_map[otherlabel]) 
      ...:         if vocab: 
-     ...:             label_vocab.append((alabel, len(vocab))) 
+     ...:             label_vocab[alabel] = vocab 
      ...:     return label_vocab 
+     ...:      
 
-In [42]: print(tabulate(py_.chunk(sorted(label_vocab, key=lambda el: el[1], reverse=True), 3)))              
-----------------------------------  ----------------------------  --------------------------------
-('oos', 359)                        ('book_hotel', 260)           ('ingredient_substitution', 242)
-('restaurant_suggestion', 230)      ('play_music', 208)           ('cook_time', 195)
-('recipe', 189)                     ('accept_reservations', 181)  ('book_flight', 173)
-('update_playlist', 172)            ('fun_fact', 168)             ('insurance_change', 164)
-('ingredients_list', 156)           ('spelling', 154)             ('restaurant_reviews', 151)
-('calendar_update', 149)            ('calculator', 147)           ('definition', 141)
-('distance', 136)                   ('transfer', 128)             ('plug_type', 127)
-('cancel_reservation', 127)         ('food_last', 126)            ('shopping_list_update', 123)
-('traffic', 123)                    ('travel_notification', 122)  ('calories', 120)
-('text', 119)                       ('weather', 119)              ('todo_list_update', 116)
-('damaged_card', 116)               ('international_fees', 113)   ('directions', 110)
-('share_location', 109)             ('vaccines', 107)             ('report_fraud', 105)
-('carry_on', 104)                   ('meal_suggestion', 104)      ('application_status', 103)
-('replacement_card_duration', 103)  ('exchange_rate', 102)        ('balance', 100)
-('credit_limit_change', 99)         ('how_busy', 98)              ('todo_list', 96)
-('restaurant_reservation', 95)      ('card_declined', 94)         ('uber', 93)
-('reminder_update', 91)             ('spending_history', 90)      ('gas_type', 90)
-('rewards_balance', 89)             ('change_ai_name', 89)        ('report_lost_card', 89)
-('car_rental', 88)                  ('confirm_reservation', 88)   ('travel_alert', 87)
-('routing', 86)                     ('transactions', 85)          ('measurement_conversion', 85)
-('interest_rate', 83)               ('timezone', 82)              ('tire_pressure', 81)
-('expiration_date', 80)             ('improve_credit_score', 79)  ('lost_luggage', 78)
-('time', 78)                        ('min_payment', 77)           ('income', 77)
-('international_visa', 76)          ('direct_deposit', 76)        ('pto_request', 75)
-('redeem_rewards', 75)              ('change_speed', 75)          ('translate', 74)
-('travel_suggestion', 74)           ('flight_status', 72)         ('nutrition_info', 71)
-('meeting_schedule', 71)            ('order', 71)                 ('make_call', 71)
-('schedule_meeting', 71)            ('jump_start', 69)            ('tell_joke', 69)
-('order_checks', 68)                ('pin_change', 67)            ('goodbye', 67)
-('whisper_mode', 67)                ('rollover_401k', 66)         ('bill_balance', 66)
-('apr', 65)                         ('account_blocked', 63)       ('new_card', 59)
-('who_made_you', 56)                ('change_language', 55)       ('change_accent', 55)
-('order_status', 54)                ('mpg', 53)                   ('last_maintenance', 52)
-('schedule_maintenance', 51)        ('calendar', 50)              ('reset_settings', 50)
-('meaning_of_life', 48)             ('current_location', 48)      ('smart_home', 47)
-('pto_balance', 47)                 ('insurance', 46)             ('freeze_account', 46)
-('pto_request_status', 46)          ('w2', 45)                    ('timer', 45)
-('taxes', 44)                       ('cancel', 43)                ('no', 43)
-('how_old_are_you', 43)             ('tire_change', 42)           ('shopping_list', 42)
-('reminder', 42)                    ('sync_device', 41)           ('greeting', 40)
-('thank_you', 40)                   ('pto_used', 40)              ('next_holiday', 39)
-('oil_change_how', 39)              ('roll_dice', 39)             ('flip_coin', 37)
-('pay_bill', 37)                    ('where_are_you_from', 37)    ('change_user_name', 36)
-('date', 36)                        ('alarm', 35)                 ('do_you_have_pets', 35)
-('bill_due', 35)                    ('credit_score', 34)          ('change_volume', 34)
-('what_are_your_hobbies', 34)       ('gas', 32)                   ('next_song', 31)
-('oil_change_when', 29)             ('credit_limit', 29)          ('yes', 26)
-('payday', 26)                      ('maybe', 25)                 ('are_you_a_bot', 24)
-('what_song', 23)                   ('what_can_i_ask_you', 19)    ('find_phone', 18)
-('repeat', 18)                      ('who_do_you_work_for', 10)   ('user_name', 9)
-('what_is_your_name', 7)
-----------------------------------  ----------------------------  --------------------------------
+In [52]: print(tabulate(py_.chunk(sorted([(k, len(v)) for k, v in label_vocab.items()], key=lambda el: el[1], reverse=True), 3))) 
+---------------------------------  -------------------------------  --------------------------------
+('oos', 370)                       ('book_hotel', 254)              ('ingredient_substitution', 232)
+('accept_reservations', 226)       ('update_playlist', 204)         ('recipe', 201)
+('play_music', 191)                ('restaurant_suggestion', 187)   ('calculator', 165)
+('book_flight', 164)               ('calendar_update', 154)         ('ingredients_list', 154)
+('traffic', 154)                   ('insurance_change', 150)        ('calories', 150)
+...
+---------------------------------  -------------------------------  --------------------------------
 ```
-We have a good idea about the vocab that defines a vocab well. Let's see a few examples.
 
-Now let's think about a target sentence, we can build `(1, 3)` ngrams and check if they lie in our filtered vocabulary. Words that don't exist, will get replaced with an `OOV` token.
+We can see the set sizes for each of the 151 classes. Let's try a maximum overlap algorithm for our classification task. Here's what it looks like in my head:
+
+1. Break a sentence into a set of ngram tokens (n = [1 - 3]).
+2. Search each token in our filtered vocabulary.
+3. If a token is not found we will re-label it as OOV.
+4. Compare the set of tokens to our labels and take a note of the intersection.
+5. Select the maximum overlap of all labels.
+
 
 ```python
-from nltk.utils import everygrams
+In [53]: def get_sentence_ngrams(sentence): 
+     ...:     return set([" ".join(token) for token in everygrams(sentence.split(" "), max_len=3)]) 
+     ...:   
 
-def transform(sentence, vocabulary_set, max_ngram=3):
-    # preproc (lower case, punctuations, numbers etc)
-    transform = []
-    for w in everygrams(sentence.split(" "), max_len=max_ngram):
-        word = " ".join(w)
-        if word in vocabulary_set:
-            transform.append(word)
-        else:
-            transform.append("OOV")
-    return transform
+In [54]: def label_missing_token_oov(tokens, vocab): 
+     ...:     return set([token if token in vocab else "OOV" for token in tokens]) 
+
+In [55]: def match_sentence_to_label(sentence, vocab_set, label_vocab): 
+     ...:     overlaps = {} 
+     ...:     tokens = get_sentence_ngrams(sentence) 
+     ...:     tokens = label_missing_token_oov(tokens, vocab_set) 
+     ...:     for label, vocab in label_vocab.items(): 
+     ...:         overlaps[label] = len(vocab.intersection(tokens)) 
+     ...:     return overlaps 
+
+In [56]: label_missing_token_oov(get_sentence_ngrams("peanut butter and jelly"), vocabulary_set)                                   
+Out[56]: {'OOV', 'jelly', 'peanut', 'peanut butter'}
+
+In [57]: overlaps = match_sentence_to_label("peanut butter and jelly", vocabulary_set, label_vocab)
+
+In [58]: sorted_overlap = sorted([(k, v) for k, v in overlaps.items() if v], key=lambda el: len(el[1]), reverse=True)                                                    
+
+In [59]: sorted_overlap[:5]                                                                                                                                              
+Out[59]: [('shopping_list', {'peanut', 'peanut butter'}), ('calories', {'jelly'})]
 ```
-
