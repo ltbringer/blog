@@ -1,5 +1,5 @@
 ---
-date: 2020-05-20
+date: 2020-05-04
 title: "Taking Rust code to Python land"
 cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
 categories:
