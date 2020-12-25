@@ -19,4 +19,14 @@ Years after being employed, I have concerns about my ability as an engineer. Lea
 
 I have seen some organizations which offer 1-week, all-paid compulsory vacation. Talking about mental health can be difficult at work, but there are jobs where stress builds up and it is very easy to ignore personal wellbeing leading to anexiety, sleeplessness. In the light of it all, it seems fair to offer such compensation. This left me thinking about intellectual well-being. If I were to ask myself about qualities of my decision making and problem solving abilities, would the answer be satisfactory? Isn't workplace stress a byproduct of poor intellectual health? 
 
-I think it is.
+I think it is. I have some leaves saved and decided to give a study vacation a try. I want to improve my machine learning foundation and programming proficiency. These are the resources I am considering for each:
+
+- Machine Learning foundation: 
+    - [Pattern Recognition and Machine Learning](https://www.amazon.in/Pattern-Recognition-Learning-Information-Statistics/dp/0387310738) 
+    - [Statistical Inference](https://fsalamri.files.wordpress.com/2015/02/casella_berger_statistical_inference1.pdf) 
+- Programming proficiency; This is not as clear because I am interested in learning:
+    - [Rust](https://livebook.manning.com/book/rust-in-action)
+    - [Cuda programming](https://www.udemy.com/course/cuda-programming-masterclass/)
+    - [The Algorithm Design Manual](https://mimoza.marmara.edu.tr/~msakalli/cse706_12/SkienaTheAlgorithmDesignManual.pdf)
+
+Also, [this video](https://www.youtube.com/watch?v=TuOcfbEUpfc) helps.
