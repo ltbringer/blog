@@ -10,6 +10,7 @@ deploy:
   github-token: $GITHUB_TOKEN
   local_dir: public
   keep-history: true
+  target_branch: gh-pages
   on:
     branch: master
 before_script:
