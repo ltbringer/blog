@@ -18,5 +18,6 @@ before_script:
   - "npm i"
 script:
   - "npm run test"
+  - "gatsby build --prefix-paths"
 after_success:
-  - "npm run build:gh"
+  - "gh-pages -d public"
