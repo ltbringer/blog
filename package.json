@@ -76,6 +76,7 @@
     "clean": "rm -rf public && rm -rf .cache",
     "lint:js": "eslint --ext .js",
     "lint:md": "remark content/posts/",
+    "test": "echo 'no tests'",
     "write-good": "write-good $(glob 'content/posts/**/*.md')",
     "format:js": "prettier '**/*.{js,jsx}' --write"
   },
