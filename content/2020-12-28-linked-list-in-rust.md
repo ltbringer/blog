@@ -53,3 +53,45 @@ Additionally, the compiler also suggests use of `Box<Node>` instead of `Node`. O
 > A pointer type for heap allocation.
 >
 > - [source](https://doc.rust-lang.org/std/boxed/struct.Box.html)
+
+Hmm.. okay let's try some code.
+
+```rust
+// Somewhere within src/main.rs
+
+struct Node {
+    value: u32,
+    next: Option<Box<Node>>,
+}
+
+fn main() {
+    let mut node1 = Node {
+        value: 1,
+        next: None,
+    };
+
+    let node2 = Node {
+        value: 2,
+        next: None,
+    };
+
+    node1.next = Some(Box::new(node2));
+
+    println!("{:?}", node1);
+}
+```
+
+The `next` property on `Node` contains an `Optional` `Box` of `Node` type. We use `Option` because initially a list would have only one item and that means the `next` property
+should point to nothing. `Option<T>` type means either expect type `T` or `None`.
+
+We create `node1` and `node2`, initialize their `next` to `None` for starters, and then
+
+```rust
+    node1.next = Some(Box::new(node2));
+```
+
+- `Some(...)` is a way to offer a value when `Option<T>` is expected.
+- `Box::new(...)` allocates memory in the heap for `node2`.
+- `node2` looks like `{ value: 2, next: None }`, nothing special.
+
+_hmm..._ We are not passing our `Node` instances to functions yet, I anticipate the [`Ownership`](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) of nodes would cause the compiler to complain once we start creating, updating, deleting nodes.
