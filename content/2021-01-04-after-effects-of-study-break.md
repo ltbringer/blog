@@ -24,7 +24,7 @@ My experience was highly positive, a quick set of points on: :
 
 1. I focused on ML, I had prgoramming and ml checkpoints planned. Didn't work out.
 2. Need to study atleast 2-3 hours everyday to improve comprehension. I found it very difficult to keep myself from wandering off due to fatigue or excitement.
-3. Couldn't stick to a self-made syllabus. There were days where I couldn't keep myself away from work commitments. Add this with a squirrel's worth of attention span I have got, and there is no significant coverage in 24h.
+3. Couldn't stick to a self-made syllabus. There were days where I couldn't keep myself away from work commitments. Add this to a squirrel's attention-span, and you get nothing covered in 24h.
 4. Due to inefficient use of time, I had to forego something even within ML. Luckily, I picked coverage over depth. It matched my attention span and also helped me understand if I should pick and rank these topics for a deeper dive.
 5. There were topics that I covered and tried to understand but even after spending hours I couldn't get a grip on the underlying concepts. No notes were written for these topics.
 
