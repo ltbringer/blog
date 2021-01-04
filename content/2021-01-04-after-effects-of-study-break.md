@@ -1,6 +1,6 @@
 ---
 date: 2020-12-27
-title: "after-effects-of-study-break"
+title: "After effects of a study break"
 cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
 categories:
   - readings
@@ -45,9 +45,9 @@ I covered [Pattern Recognition and Machine Learning](https://www.amazon.in/Patte
 
 ## A page from the notebook
 
-![linear-models-for-classification](./images/linear_models_for_clf_1.jpg)
+![Linear models for classification: discriminant function](./images/linear_models_for_clf_1.jpg)
 
-![linear-models-for-classification](./images/linear_models_for_clf_2.jpg)
+![Linear models for classification: decision boundary](./images/linear_models_for_clf_2.jpg)
 
 ## Other readings
 

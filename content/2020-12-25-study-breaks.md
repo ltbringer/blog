@@ -1,6 +1,6 @@
 ---
 date: 2020-12-25
-title: "study-breaks"
+title: "Study Breaks"
 cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
 categories:
   - experiments
