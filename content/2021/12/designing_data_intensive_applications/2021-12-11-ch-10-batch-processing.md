@@ -51,16 +51,17 @@ cat /var/log/nginx/access.log | awk '{print $7}' | sort | uniq -c | sort -r -n |
 We can get the same done via `python` like so:
 
 ```python
-from typing import List
+# Program reads nginx log files and prints n-most/least requested urls.
+from typing import Dict, List
 from collections import defaultdict
 
 
-def read_logs(path: str):
-    with open("/var/log/nginx/access.log", "r") as handle:
+def read_logs(fpath: str) -> List[str]:
+    with open(fpath, "r") as handle:
         return handle.read().splitlines()
 
 
-def process_logs(logs: List[str]):
+def process_logs(logs: List[str]) -> defaultdict:
     url_requests = defaultdict(int)
     for log in logs:
         url = log.split()[6]
@@ -68,8 +69,10 @@ def process_logs(logs: List[str]):
     return url_requests
 
 
-def rank(url_requests, n=1, reverse=False):
+def rank(url_requests: defaultdict, n=1, reverse=False) -> List[Dict[str, int]]:
     return [{url: url_requests[url]} for url in sorted(url_requests, reverse=reverse)]
+
+rank(process_logs(read_logs("/var/log/nginx/access.log")), n=5, reverse=True)
 ```
 
 The two might be functionally same, but we notice performance differences on larger log files.
