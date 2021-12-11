@@ -207,7 +207,7 @@ The profiler saves the inspection results in `program.prof` this can be used by 
 snakeviz /path/to/program.prof
 ```
 I see this plot on my machine:
-![Fig. Icicle plot of program performance (click to zoom)](./images/pattern_experiment_icicle.png)
+![Fig. Icicle plot of program performance (click to zoom)](../images/pattern_experiment_icicle.png)
 
 According to this we spend 201ms for `re.search` and 71ms for `re.compile`. Let's try to pre-compile our patterns and check the results.
 
@@ -228,7 +228,7 @@ In [31]: def match_change(items, patterns):
 
 ```
 Line [30] has an additional `flags=re.I` thrown in, we would need it to do case insensitive searches. Let's see how much this change helps. It shouldn't do much because we only lost 70ms to it.
-![Fig. Icicle plot after pre-compiling patterns (click to zoom)](./images/pattern_experiment_icicle_2.png)
+![Fig. Icicle plot after pre-compiling patterns (click to zoom)](../images/pattern_experiment_icicle_2.png)
 
 As expected this isn't a huge change, but let's not underestimate it as well. This is a change that scales. What if we had 100s of patterns? taking 4 patterns per-intent leads us to `4 x 150 = 600` Patterns.
 Let's simulate with 400 patterns and compare the results, both with and without pre-compilation. Let's simulate some patterns:
@@ -238,8 +238,8 @@ patterns = patterns * 20 # We have 440 patterns now.
 ```
 We recalculate compiled_patterns as well to keep it fair.
 
-![Fig. Icicle plot showing performance of program with 440 un-compiled patterns](./images/pattern_experiment_icicle_3.png)
-![Fig. Icicle plot showing performance of program with 440 pre-compiled patterns](./images/pattern_experiment_4.png)
+![Fig. Icicle plot showing performance of program with 440 un-compiled patterns](../images/pattern_experiment_icicle_3.png)
+![Fig. Icicle plot showing performance of program with 440 pre-compiled patterns](../images/pattern_experiment_4.png)
 
 A whopping **1.36s** saved! That said, both numbers are painfully sad to the point of being unusable or at least frustrating. This could mean around **7s to 10s** of total response from a smart-home device. That wouldn't be _very smart_.
 
@@ -321,7 +321,7 @@ Don't worry about the numbers, we allowed the same sentence to match against dif
 ```
 These patterns are sparingly selective about the sentences. We will simulated a large number of patterns to compare with the previous. Let's see how slower is that, for the sake of bervity we will assume plots from compiled patterns.
 
-![Fig. Icicle plot showing performance of patterns with .* removed](./images/pattern_experiment_icicle_5.png)
+![Fig. Icicle plot showing performance of patterns with .* removed](../images/pattern_experiment_icicle_5.png)
 
 That's not a lot of boost? A gain of 13ms is trivial when the overall time is over 3 seconds.
 
@@ -428,7 +428,7 @@ In [35]: def match_rustic(items):
 ```
 We pass each sentence one at a time and the library returns a list with scores for each pattern. If we see a non-zero score, we pick it (as we have been doing). We could pass multiple sentences but we aren't as we want them to be scored separately. This feature of accepting multiple sentences is for ASR outputs which generally produce multiple utterances that need to be used. Let's see how this works.
 
-![Fig. Icicle plot of program ported to Rust and used via python bindings](./images/pattern_experiment_icicle_6.png)
+![Fig. Icicle plot of program ported to Rust and used via python bindings](../images/pattern_experiment_icicle_6.png)
 
 Yes, I ran this with all 440 patterns and we get down to **38ms**. This is much lesser than python's implementation using 21 patterns to yield results in **200ms**.
 

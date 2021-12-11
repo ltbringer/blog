@@ -29,9 +29,9 @@ An attempt at a single frame needing basic shapes and I run out of fingers tryin
 how arcs and lines as simplified in both the drawings convey emotion. The original seems casual about the episode. While my attempt
 appears to carry a different mood. A taunt. Should be useful to use eyebrows this way when I need that look.
 
-![!cyanide and happiness](./images/2020-04-20-lucifers-pen-cyanide-dream.jpg) 
+![!cyanide and happiness](../images/2020-04-20-lucifers-pen-cyanide-dream.jpg) 
 
 Alphabets are easier, I practiced for an hour daily for a few days. I still can't control the pressure during the down-strokes
 and stay gentle during the up-strokes which yield really pleasing effects.
 
-![flex practice](./images/2020-04-20-lucifers-pen-flex-practice.jpg)
+![flex practice](../images/2020-04-20-lucifers-pen-flex-practice.jpg)

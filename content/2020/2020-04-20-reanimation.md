@@ -29,20 +29,20 @@ We can tell that as the temperature falls, the electric field due to any ions wi
 
 ## Obtaining artifacts
 
-![Credits - https://backyardbrains.com/experiments/spikerbox](./images/RoachwithLeg_web.jpg)
+![Credits - https://backyardbrains.com/experiments/spikerbox](../images/RoachwithLeg_web.jpg)
 
 Once you have an unconscious cockroach, you umm... are required to do the thing.
 
 ## Rate coding neural activity
 Place the leg on cork surface and pin two electrodes in, as shown in the image:
-![Credits - https://backyardbrains.com/experiments/spikerbox](./images/legwithwires_web.jpg)
+![Credits - https://backyardbrains.com/experiments/spikerbox](../images/legwithwires_web.jpg)
 We need a device to amplify the potential difference so that it can be seen while isolating noise. Touching the hairs of the leg causes neurons to spike and create a response that can be seen in the following image:
 
-![Credits - https://backyardbrains.com/experiments/spikerbox](./images/Exp1_exp05_spiketrain.jpg)
+![Credits - https://backyardbrains.com/experiments/spikerbox](../images/Exp1_exp05_spiketrain.jpg)
 
 Zooming into a section shows the action potential of a neuron. The reason behind this behaviour is stated to be the opening and closing of $Na^{+}$, ${K}^{+}$ ion-channels.
 
-![Credits - https://backyardbrains.com/experiments/spikerbox](./images/Exp1_exp06_closeupspike.jpg)
+![Credits - https://backyardbrains.com/experiments/spikerbox](../images/Exp1_exp06_closeupspike.jpg)
 
 ## Getting the leg to move
 So far, we read the information that was going across the limb, reading the neural signals. Is it possible to send signals back? and what does that do?

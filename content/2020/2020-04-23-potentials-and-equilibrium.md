@@ -24,11 +24,11 @@ So far we have established that neurons have electric charges due to the presenc
 ### Diffusion
 Imagine a liquid in a container. Adding a drop of colour will cause the colour to disperse farther from the point of initial contact in a random fashion. Diffusion defines movement from a region of high concentration to lower concentration. This means at some point the concentration throughout the liquid will be similar at that point the movement would cease.
 
-![Fig: Diffusion of K+ ions, movement from a region of high-concentration (inside the membrane) to low-concentration (outside the membrane).](./images/diffusion.jpg)
+![Fig: Diffusion of K+ ions, movement from a region of high-concentration (inside the membrane) to low-concentration (outside the membrane).](../images/diffusion.jpg)
 
 ### Electrostatic forces
 Charges can be positive or negative depending on the presence of electrons in the material. If same type of charges are brought together, they will repel each other. Charged materials seek the opposite type of charge to balance their excess or deficit of charge so that they can go back to their non-ionized, natural state.
-![Fig: Electrostatic effects prevent movement across the ion channel](./images/electrostatics-and-k-plus-ions.jpg)
+![Fig: Electrostatic effects prevent movement across the ion channel](../images/electrostatics-and-k-plus-ions.jpg)
 
 ## Building charges
 Let's assume a scenario, if the concentration of say, $K^{+}$ ions inside the neuron is $200 mM$ while outside the concentration is $10mM$, then diffusion will cause $K^{+}$ ions to move outside. This follows a more positive charge on the outside of the neuron's membrane. The movement is facilitated by ion channels, these ion channels have limited permeability which is different for different ions. 

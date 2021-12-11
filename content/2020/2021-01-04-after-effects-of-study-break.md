@@ -45,9 +45,9 @@ I covered [Pattern Recognition and Machine Learning](https://www.amazon.in/Patte
 
 ## A page from the notebook
 
-![Linear models for classification: discriminant function](./images/linear_models_for_clf_1.jpg)
+![Linear models for classification: discriminant function](../images/linear_models_for_clf_1.jpg)
 
-![Linear models for classification: decision boundary](./images/linear_models_for_clf_2.jpg)
+![Linear models for classification: decision boundary](../images/linear_models_for_clf_2.jpg)
 
 ## Other readings
 

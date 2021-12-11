@@ -9,7 +9,7 @@ tags:
     - illustration
 ---
 
-![Fig: Diffusion of K+ ions, movement from a region of high-concentration (inside the membrane) to low-concentration (outside the membrane).](./images/diffusion.jpg)
+![Fig: Diffusion of K+ ions, movement from a region of high-concentration (inside the membrane) to low-concentration (outside the membrane).](../images/diffusion.jpg)
 
 
 While taking a course on neuroscience, I read about how neurons communicate. This image answers one of the basic principles involved, how do neurons get charged in the first place?
