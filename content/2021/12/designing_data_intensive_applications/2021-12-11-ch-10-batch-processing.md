@@ -96,3 +96,36 @@ _Unix pipes built in 1964 by Doug McIlroy._
 3. Design and build software to be tried early. Ideally within weeks. Don't hesitate to throw away clumsy parts and rebuild.
 4. Use tools in preference to unskilled help to lighten a programming task.
 
+### Transparency and Experimentation
+
+Notes on success for Unix tools:
+
+1. Inputs are immutable. 
+2. Outputs are saved in files. 
+3. [2] allows debugging the intermediates in the pipeline.
+
+The limitation of unix tools is single machine restriction. 
+
+## MapReduce and Distributed File Systems
+
+- `MapReduce` is built like Unix tools, but can be distributed across multiple machines.
+- Fault tolerance: File blocks should be accessible in case of machine failures. 
+    - This can be achieved by replication.
+    - [Reed Solomon codes](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction) to recover data without full replication.
+    - [more](https://www.youtube.com/watch?v=dpxD8gwgbOc)
+
+## Distributed execution of MapReduce
+
+![A MapReduce job with 3 Mappers and 3 Reducers](../../../images/2021/12/designing_data_intensive_applications/batch-processing/map-reduce.png)
+
+### Procedure
+
+1. `MapReduce` frameworks copy the code to remote machines.
+2. `Mappers` read the input files and produce key-value pairs.
+3. `Reducers` computation runs in partitions.
+    1. Authors decide how many reduce tasks to run.
+    2. This is to ensure the same keys reach the same reducer.
+4. The key-value pairs are supposed to be sorted (this can't be done on a single machine).
+    1. Sorting is multi-stage.
+    2. Each partition is written onto a sorted file.
+
