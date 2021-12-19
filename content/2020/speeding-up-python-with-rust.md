@@ -1,7 +1,7 @@
 ---
 date: 2020-04-25
 title: "Regular expressions and efficiency"
-cover: "https://picsum.photos/seed/seed_n/500/300"
+cover: "https://picsum.photos/seed/seed_n/1500/300"
 categories:
     - programming
     - experiments

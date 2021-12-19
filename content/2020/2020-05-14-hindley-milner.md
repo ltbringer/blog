@@ -1,7 +1,7 @@
 ---
 date: 2020-05-14
 title: "Hindley milner for humans"
-cover: "https://picsum.photos/seed/seed_n/500/300"
+cover: "https://picsum.photos/seed/seed_n/1500/300"
 categories:
     - readings
 tags:

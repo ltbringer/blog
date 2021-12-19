@@ -1,7 +1,7 @@
 ---
 date: 2020-12-27
 title: "After effects of a study break"
-cover: "https://picsum.photos/seed/seed_n/500/300"
+cover: "https://picsum.photos/seed/seed_n/1500/300"
 categories:
   - readings
 tags:

@@ -3,17 +3,17 @@ import { Link } from 'gatsby'
 import styles from './PostsListing.module.scss'
 import PostTags from '../components/PostTags'
 import postStyles from '../components/PostTags.module.scss'
+import { randomInt } from '../utils/random'
 
 const PostListing = ({ postEdges }) => {
   const getPostList = () => {
     const postList = []
     postEdges.forEach((postEdge, i) => {
-      console.log(postEdge.node.frontmatter.cover.replace(/seed_n/, i + 1))
       postList.push({
         path: postEdge.node.fields.slug,
         tags: postEdge.node.frontmatter.tags,
         categories: postEdge.node.frontmatter.categories,
-        cover: postEdge.node.frontmatter.cover.replace(/seed_n/, i + 1),
+        cover: postEdge.node.frontmatter.cover.replace(/seed_n/, i + randomInt(100, 200)),
         title: postEdge.node.frontmatter.title,
         date: postEdge.node.fields.date,
         excerpt: postEdge.node.excerpt,

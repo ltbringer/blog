@@ -11,6 +11,7 @@ import styles from './post.module.scss'
 import './prism-material-light.css'
 import './katex.min.css'
 import './katex-override.css'
+import { randomInt } from '../utils/random'
 
 export default ({ data, pageContext }) => {
   const { slug, nexttitle, nextslug, prevtitle, prevslug } = pageContext
@@ -20,6 +21,7 @@ export default ({ data, pageContext }) => {
   if (!post.id) {
     post.id = slug
   }
+  const imgUrl = postNode.frontmatter.cover.replace(/seed_n/, randomInt(100, 200))
   return (
     <Layout>
       <main ref={elem => {
@@ -35,11 +37,12 @@ export default ({ data, pageContext }) => {
               elem.appendChild(scriptElem)
           }
       }}>
+        <div className={styles.cover} style={{"backgroundImage": `url(${imgUrl})`}}/>
         <Helmet>
           <title>{`${post.title} | ${config.siteTitle}`}</title>
         </Helmet>
         <SEO postPath={slug} postNode={postNode} postSEO />
-        <div>
+        <div className={styles.post}>
           <h1>{post.title}</h1>
           <p className={styles.postMeta}>
             {date} &mdash; {postNode.timeToRead} Min Read{' '}

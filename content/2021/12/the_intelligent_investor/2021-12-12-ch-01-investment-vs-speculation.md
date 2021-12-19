@@ -1,7 +1,7 @@
 ---
 date: 2021-12-12
 title: "Ch-01 Investment versus Speculation: Results to be expected by the Intelligent Investor"
-cover: "https://picsum.photos/seed/seed_n/500/300"
+cover: "https://picsum.photos/seed/seed_n/1500/300"
 categories:
     - readings
 tags:
