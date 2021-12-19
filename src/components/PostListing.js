@@ -7,12 +7,13 @@ import postStyles from '../components/PostTags.module.scss'
 const PostListing = ({ postEdges }) => {
   const getPostList = () => {
     const postList = []
-    postEdges.forEach(postEdge => {
+    postEdges.forEach((postEdge, i) => {
+      console.log(postEdge.node.frontmatter.cover.replace(/seed_n/, i + 1))
       postList.push({
         path: postEdge.node.fields.slug,
         tags: postEdge.node.frontmatter.tags,
         categories: postEdge.node.frontmatter.categories,
-        cover: postEdge.node.frontmatter.cover,
+        cover: postEdge.node.frontmatter.cover.replace(/seed_n/, i + 1),
         title: postEdge.node.frontmatter.title,
         date: postEdge.node.fields.date,
         excerpt: postEdge.node.excerpt,
@@ -31,6 +32,7 @@ const PostListing = ({ postEdges }) => {
           <article className={styles.articleBox}>
             <div className={styles.right}>
               <h3>{post.title}</h3>
+              <img src={post.cover} />
               <div className={styles.meta}>
                 {post.date} &mdash; <span>{post.categories.join(' / ')}</span>{' '}
                 &mdash; {post.timeToRead} Min Read{' '}

@@ -1,7 +1,7 @@
 ---
 date: 2021-12-11
 title: "Ch-10 Batch Processing With Unix Tools"
-cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
+cover: "https://picsum.photos/seed/seed_n/500/300"
 categories:
     - readings
 tags:
@@ -128,4 +128,3 @@ The limitation of unix tools is single machine restriction.
 4. The key-value pairs are supposed to be sorted (this can't be done on a single machine).
     1. Sorting is multi-stage.
     2. Each partition is written onto a sorted file.
-

@@ -1,7 +1,7 @@
 ---
 date: 2020-04-28
 title: "Text classification conflicts and hierarchical models"
-cover: "https://unsplash.it/1152/300/?random?BirchintheRoses"
+cover: "https://picsum.photos/seed/seed_n/500/300"
 categories:
     - experiments
 tags:
