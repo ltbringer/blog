@@ -1,6 +1,6 @@
 ---
 date: 2021-12-11
-title: "Ch-10 Batch Processing With Unix Tools"
+title: "Ch-10 Batch Processing With Unix Tools Part 1"
 cover: "https://picsum.photos/seed/seed_n/1500/300"
 categories:
     - readings
