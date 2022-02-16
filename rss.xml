@@ -1,4 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ltbringer/blog]]></title><description><![CDATA[Programming|Art|Readings|Experiments.]]></description><link>https://ltbringer.github.io/blog</link><image><url>https://ltbringer.github.io/blog/logos/logo-48.png</url><title>ltbringer/blog</title><link>https://ltbringer.github.io/blog</link></image><generator>GatsbyJS Advanced Starter</generator><lastBuildDate>Wed, 16 Feb 2022 17:35:34 GMT</lastBuildDate><atom:link href="https://ltbringer.github.io/blog/rss.xml" rel="self" type="application/rss+xml"/><copyright><![CDATA[Copyright © 2020. All rights reserved.]]></copyright><item><title><![CDATA[Ch-10 Batch Processing With Unix Tools Part 2]]></title><description><![CDATA[Reducing side-joins and grouping In a relational database setting data is usually normalized for faster queries. It is common for a record…]]></description><link>https://ltbringer.github.io/blog/ch-10-batch-processing-with-unix-tools-part-2</link><guid isPermaLink="false">https://ltbringer.github.io/blog/ch-10-batch-processing-with-unix-tools-part-2</guid><category><![CDATA[engineering]]></category><category><![CDATA[designing-data-intensive-applications]]></category><pubDate>Sat, 25 Dec 2021 18:30:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;reducing-side-joins-and-grouping&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#reducing-side-joins-and-grouping&quot; aria-label=&quot;reducing side joins and grouping permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Reducing side-joins and grouping&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ltbringer/blog]]></title><description><![CDATA[Programming|Art|Readings|Experiments.]]></description><link>https://ltbringer.github.io/blog</link><image><url>https://ltbringer.github.io/blog/logos/logo-48.png</url><title>ltbringer/blog</title><link>https://ltbringer.github.io/blog</link></image><generator>GatsbyJS Advanced Starter</generator><lastBuildDate>Wed, 16 Feb 2022 17:41:47 GMT</lastBuildDate><atom:link href="https://ltbringer.github.io/blog/rss.xml" rel="self" type="application/rss+xml"/><copyright><![CDATA[Copyright © 2020. All rights reserved.]]></copyright><item><title><![CDATA[Scaling down]]></title><description><![CDATA[Scaling Down Learning new things comes at a cost. A mistake I often make is rushing too soon. 
+Patience is necessary to get familiar and…]]></description><link>https://ltbringer.github.io/blog/scaling-down</link><guid isPermaLink="false">https://ltbringer.github.io/blog/scaling-down</guid><pubDate>Tue, 15 Feb 2022 18:30:00 GMT</pubDate><content:encoded>&lt;h1 id=&quot;scaling-down&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#scaling-down&quot; aria-label=&quot;scaling down permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Scaling Down&lt;/h1&gt;
+&lt;p&gt;Learning new things comes at a cost. A mistake I often make is rushing too soon.
+Patience is necessary to get familiar and build a strong foundation of the fundamentals. My train of thought
+is usually a grand idea that would blow up the internet, even the world but rarely something even comes out of it.
+Mostly ideas die in their infancy, projects get shelved because of a &lt;em&gt;sheer lack of time&lt;/em&gt;.
+I realized my mistake but I didn&apos;t know where to go to fix this. The older I grow, time management (or the lack of it)
+compounds, making it all the more frustrating to get things done.&lt;/p&gt;
+&lt;h2 id=&quot;never-enough-time&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#never-enough-time&quot; aria-label=&quot;never enough time permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Never enough time&lt;/h2&gt;
+&lt;p&gt;A lesson I have learned is, if anything fails and the reasons for failure are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Not enough time.&lt;/li&gt;
+&lt;li&gt;Inadequate planning.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Then the reasons of failure are lazy and dishonest. These have been my reasons for dead projects.
+I have since started asking alternative questions to myself:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;What would I do if I had all the time in the world to set things on track?&lt;/li&gt;
+&lt;li&gt;What would I do if I only had 5 minutes?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The order of these questions lends to a refutable order of tasks. Refutability is important. It gives you
+better reasons for failure. Even a direction for improvement. This is where I have learned honesty to self is
+much more important than being the smartest person in the room. It takes a lot to be smarter than yourself, but
+it costs nothing to be honest.&lt;/p&gt;
+&lt;h2 id=&quot;discipline&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#discipline&quot; aria-label=&quot;discipline permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Discipline&lt;/h2&gt;
+&lt;p&gt;Once a genuine problem is identified for a failed objective. It would fall down into:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Lack of knowledge - Don&apos;t understand the problem. Little to no research of existing solutions.&lt;/li&gt;
+&lt;li&gt;Poor fluency. - Lack of experience of solving sub-problems or even simplifying the problem.&lt;/li&gt;
+&lt;li&gt;Poor Attitude. - Lazy execution, underestimating the problem, no accountability.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;1 and 2 are solved by effort. 3 is solved by discipline. Often poor attitude is chalked up to lack of motivation.
+All it takes to get even mediocre results is consistently failing. Consistency is important. It is necessary to spend
+at least an hour to plan for an important objective. At least 3 hours of practice to improve fluency drastically.&lt;/p&gt;
+&lt;p&gt;I realized, my ideas and projects failed because of all three. To get ahead from here, it is necessary to do &lt;em&gt;less&lt;/em&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;more-with-less&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#more-with-less&quot; aria-label=&quot;more with less permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;More with Less&lt;/h2&gt;
+&lt;p&gt;I realized in the pursuit of doing a lot of things, I got stuck with almost no proof of work and nothing to be proud of.
+To address the problems I have, I have to do less.&lt;/p&gt;
+&lt;p&gt;Instead of rushing for 100 push ups on a Saturday morning to never follow up because it hurts a lot the next day
+and then the next day is too busy, until the day the objective is completely lost. It is more important to do 20 push ups.
+20 is far less than my physical ability &lt;strong&gt;but&lt;/strong&gt; 20 is far too much for my consistency.
+It is great to be able to do 100 push ups everyday for a year, but if it isn&apos;t practical, even 20 would help.&lt;/p&gt;
+&lt;p&gt;The body would naturally get very &lt;em&gt;fluent&lt;/em&gt; for 20 push ups that it wouldn&apos;t hurt the
+next day if an additional 10 push ups were performed. Expect yourself to faithfully do 40 everyday in 3 months and
+100 by the end of the year. It is important to build a habit before it is improved.&lt;/p&gt;
+&lt;p&gt;Ambition is madness if it achieves nothing. Ambition that gets things done, speaks for itself.&lt;/p&gt;</content:encoded><author>oilyfood@protonmail.com</author></item><item><title><![CDATA[Ch-10 Batch Processing With Unix Tools Part 2]]></title><description><![CDATA[Reducing side-joins and grouping In a relational database setting data is usually normalized for faster queries. It is common for a record…]]></description><link>https://ltbringer.github.io/blog/ch-10-batch-processing-with-unix-tools-part-2</link><guid isPermaLink="false">https://ltbringer.github.io/blog/ch-10-batch-processing-with-unix-tools-part-2</guid><category><![CDATA[engineering]]></category><category><![CDATA[designing-data-intensive-applications]]></category><pubDate>Sat, 25 Dec 2021 18:30:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;reducing-side-joins-and-grouping&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#reducing-side-joins-and-grouping&quot; aria-label=&quot;reducing side joins and grouping permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Reducing side-joins and grouping&lt;/h2&gt;
 &lt;p&gt;In a relational database setting data is usually normalized for faster queries. It is common for a record to have references to other records.
 Coalescing such data is usually achieved by the means of a &lt;code class=&quot;language-text&quot;&gt;JOIN&lt;/code&gt; operation. Another alternative is to denormalize data. &lt;/p&gt;
 &lt;p&gt;It can be expected that a database query is indexed, reducing the time it takes to fetch the records. MapReduce jobs don&apos;t have a concept of indexing.
@@ -289,52 +334,7 @@ It is able to &lt;em&gt;remember&lt;/em&gt; everything about an enemy that showe
 &lt;li&gt;Discarding the lowest price stock isn&apos;t sound advice [pt 2].&lt;/li&gt;
 &lt;li&gt;40% into the 2nd lowest stock doesn&apos;t translate to &quot;minimal risk&quot; [pt 3].&lt;/li&gt;
 &lt;li&gt;A portfolio of 4 stocks doesn&apos;t address the diversity required for &quot;safety of principal&quot;. [Definition of Investment].&lt;/li&gt;
-&lt;/ol&gt;</content:encoded><author>oilyfood@protonmail.com</author></item><item><title><![CDATA[Scaling down]]></title><description><![CDATA[Scaling Down Learning new things comes at a cost. A mistake I often make is rushing too soon. 
-Patience is necessary to get familiar and…]]></description><link>https://ltbringer.github.io/blog/scaling-down</link><guid isPermaLink="false">https://ltbringer.github.io/blog/scaling-down</guid><pubDate>Fri, 10 Dec 2021 18:30:00 GMT</pubDate><content:encoded>&lt;h1 id=&quot;scaling-down&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#scaling-down&quot; aria-label=&quot;scaling down permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Scaling Down&lt;/h1&gt;
-&lt;p&gt;Learning new things comes at a cost. A mistake I often make is rushing too soon.
-Patience is necessary to get familiar and build a strong foundation of the fundamentals. My train of thought
-is usually a grand idea that would blow up the internet, even the world but rarely something even comes out of it.
-Mostly ideas die in their infancy, projects get shelved because of a &lt;em&gt;sheer lack of time&lt;/em&gt;.
-I realized my mistake but I didn&apos;t know where to go to fix this. The older I grow, time management (or the lack of it)
-compounds, making it all the more frustrating to get things done.&lt;/p&gt;
-&lt;h2 id=&quot;never-enough-time&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#never-enough-time&quot; aria-label=&quot;never enough time permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Never enough time&lt;/h2&gt;
-&lt;p&gt;A lesson I have learned is, if anything fails and the reasons for failure are:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Not enough time.&lt;/li&gt;
-&lt;li&gt;Inadequate planning.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Then the reasons of failure are lazy and dishonest. These have been my reasons for dead projects.
-I have since started asking alternative questions to myself:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;What would I do if I had all the time in the world to set things on track?&lt;/li&gt;
-&lt;li&gt;What would I do if I only had 5 minutes?&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;The order of these questions lends to a refutable order of tasks. Refutability is important. It gives you
-better reasons for failure. Even a direction for improvement. This is where I have learned honesty to self is
-much more important than being the smartest person in the room. It takes a lot to be smarter than yourself, but
-it costs nothing to be honest.&lt;/p&gt;
-&lt;h2 id=&quot;discipline&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#discipline&quot; aria-label=&quot;discipline permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Discipline&lt;/h2&gt;
-&lt;p&gt;Once a genuine problem is identified for a failed objective. It would fall down into:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Lack of knowledge - Don&apos;t understand the problem. Little to no research of existing solutions.&lt;/li&gt;
-&lt;li&gt;Poor fluency. - Lack of experience of solving sub-problems or even simplifying the problem.&lt;/li&gt;
-&lt;li&gt;Poor Attitude. - Lazy execution, underestimating the problem, no accountability.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;1 and 2 are solved by effort. 3 is solved by discipline. Often poor attitude is chalked up to lack of motivation.
-All it takes to get even mediocre results is consistently failing. Consistency is important. It is necessary to spend
-at least an hour to plan for an important objective. At least 3 hours of practice to improve fluency drastically.&lt;/p&gt;
-&lt;p&gt;I realized, my ideas and projects failed because of all three. To get ahead from here, it is necessary to do &lt;em&gt;less&lt;/em&gt;.&lt;/p&gt;
-&lt;h2 id=&quot;more-with-less&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#more-with-less&quot; aria-label=&quot;more with less permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;More with Less&lt;/h2&gt;
-&lt;p&gt;I realized in the pursuit of doing a lot of things, I got stuck with almost no proof of work and nothing to be proud of.
-To address the problems I have, I have to do less.&lt;/p&gt;
-&lt;p&gt;Instead of rushing for 100 push ups on a Saturday morning to never follow up because it hurts a lot the next day
-and then the next day is too busy, until the day the objective is completely lost. It is more important to do 20 push ups.
-20 is far less than my physical ability &lt;strong&gt;but&lt;/strong&gt; 20 is far too much for my consistency.
-It is great to be able to do 100 push ups everyday for a year, but if it isn&apos;t practical, even 20 would help.&lt;/p&gt;
-&lt;p&gt;The body would naturally get very &lt;em&gt;fluent&lt;/em&gt; for 20 push ups that it wouldn&apos;t hurt the
-next day if an additional 10 push ups were performed. Expect yourself to faithfully do 40 everyday in 3 months and
-100 by the end of the year. It is important to build a habit before it is improved.&lt;/p&gt;
-&lt;p&gt;Ambition is madness if it achieves nothing. Ambition that gets things done, speaks for itself.&lt;/p&gt;</content:encoded><author>oilyfood@protonmail.com</author></item><item><title><![CDATA[Ch-10 Batch Processing With Unix Tools Part 1]]></title><description><![CDATA[The chapter starts with a brief on online vs offline vs stream processing systems. Systems Services (online-systems) Awaits a request. Sends…]]></description><link>https://ltbringer.github.io/blog/ch-10-batch-processing-with-unix-tools-part-1</link><guid isPermaLink="false">https://ltbringer.github.io/blog/ch-10-batch-processing-with-unix-tools-part-1</guid><category><![CDATA[engineering]]></category><category><![CDATA[designing-data-intensive-applications]]></category><pubDate>Fri, 10 Dec 2021 18:30:00 GMT</pubDate><content:encoded>&lt;p&gt;The chapter starts with a brief on online vs offline vs stream processing systems.&lt;/p&gt;
+&lt;/ol&gt;</content:encoded><author>oilyfood@protonmail.com</author></item><item><title><![CDATA[Ch-10 Batch Processing With Unix Tools Part 1]]></title><description><![CDATA[The chapter starts with a brief on online vs offline vs stream processing systems. Systems Services (online-systems) Awaits a request. Sends…]]></description><link>https://ltbringer.github.io/blog/ch-10-batch-processing-with-unix-tools-part-1</link><guid isPermaLink="false">https://ltbringer.github.io/blog/ch-10-batch-processing-with-unix-tools-part-1</guid><category><![CDATA[engineering]]></category><category><![CDATA[designing-data-intensive-applications]]></category><pubDate>Fri, 10 Dec 2021 18:30:00 GMT</pubDate><content:encoded>&lt;p&gt;The chapter starts with a brief on online vs offline vs stream processing systems.&lt;/p&gt;
 &lt;h2 id=&quot;systems&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#systems&quot; aria-label=&quot;systems permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Systems&lt;/h2&gt;
 &lt;h3 id=&quot;services-online-systems&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#services-online-systems&quot; aria-label=&quot;services online systems permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Services (online-systems)&lt;/h3&gt;
 &lt;ol&gt;
@@ -2643,7 +2643,96 @@ We need a device to amplify the potential difference so that it can be seen whil
 &lt;p&gt;These questions have answers in &lt;em&gt;verbs&lt;/em&gt; and &lt;em&gt;nouns&lt;/em&gt;, the solutions for these become &lt;em&gt;Intent Classification&lt;/em&gt; and &lt;em&gt;Entity Recognition&lt;/em&gt;. Reducing the sentence so recklessly only asks yet another question. &lt;/p&gt;
 &lt;p&gt;If it meant the same to strip a sentence of everything that is not statistically dominant, why would humans converse with it? As feature engineers, we try to reduce a sentence into its bare minimum form. Pulling out signal from the noise. A lack of a rigorous approach makes it hard to justify which reductions are appropriate, also, are these reductions appropriate for the set of all sentences? even if these sentences strictly belong to the business requirement? Are business requirements as strict as they should be to answer these questions?&lt;/p&gt;
 &lt;p&gt;Maybe, noise is not meant to be stripped off even if it represents a minority. Maybe the noise is the information we have with no means to understand it.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;to be continued...&lt;/em&gt;&lt;/p&gt;</content:encoded><author>oilyfood@protonmail.com</author></item><item><title><![CDATA[Thread Communication simulation]]></title><description><![CDATA[Let's say we have:  A buffer of limited size. A couple of producers. A couple of consumers. What happens when producers try to fill the…]]></description><link>https://ltbringer.github.io/blog/thread-communication-simulation</link><guid isPermaLink="false">https://ltbringer.github.io/blog/thread-communication-simulation</guid><category><![CDATA[scala]]></category><category><![CDATA[parallel]]></category><pubDate>Sun, 19 Apr 2020 18:30:00 GMT</pubDate><content:encoded>&lt;p&gt;Let&apos;s say we have: &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;to be continued...&lt;/em&gt;&lt;/p&gt;</content:encoded><author>oilyfood@protonmail.com</author></item><item><title><![CDATA[Lucifer's pen]]></title><description><![CDATA[This year around February mid, I was introduced to mountainofink.com. The blog itself is aesthetically pleasing and my friend happened to…]]></description><link>https://ltbringer.github.io/blog/lucifers-pen</link><guid isPermaLink="false">https://ltbringer.github.io/blog/lucifers-pen</guid><category><![CDATA[calligraphy]]></category><pubDate>Sun, 19 Apr 2020 18:30:00 GMT</pubDate><content:encoded>&lt;p&gt;This year around February mid, I was introduced to &lt;a href=&quot;https://www.mountainofink.com/&quot;&gt;mountainofink.com&lt;/a&gt;. The blog itself is aesthetically pleasing and my friend happened to show me a collection of inks with passion I barely understood, but it stirred out a memory that I didn&apos;t think I&apos;ll revisit. You may remember it as a &lt;em&gt;satisfying&lt;/em&gt; gif on popular social media.&lt;/p&gt;
+&lt;div class=&quot;gatsby-resp-iframe-wrapper&quot; style=&quot;padding-bottom: 56.25%; position: relative; height: 0; overflow: hidden; &quot; &gt; &lt;iframe src=&quot;https://www.youtube.com/embed/ihbsJMjIFD0&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen=&quot;&quot; style=&quot; position: absolute; top: 0; left: 0; width: 100%; height: 100%; &quot;&gt;&lt;/iframe&gt; &lt;/div&gt;
+&lt;p&gt;I remember watching this longer than I&apos;d like to admit, something about the symmetry, the flow, the flexing tines of the nib. Having met an old memory again, I felt an inspiration for calligraphy.&lt;/p&gt;
+&lt;h2 id=&quot;supplies&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#supplies&quot; aria-label=&quot;supplies permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Supplies&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Brause Steno Nib.&lt;/li&gt;
+&lt;li&gt;Pilot Iroshizuku - Take Sumi. (Standard dark ink, works with dip and fountain pens)&lt;/li&gt;
+&lt;li&gt;Artangle The Almond Branches By Vincent Van Gogh Hardcover Plain A5 Size Premium Notebook (190 gsm sheets)&lt;/li&gt;
+&lt;li&gt;KABEER ART Dip Pen Oblique Calligraphy Pen Holder Set Of 1 (Nib Holder)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;fooling-around&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#fooling-around&quot; aria-label=&quot;fooling around permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Fooling around&lt;/h2&gt;
+&lt;p&gt;I like the humour in cyanide and happiness comics. Here is an attempt at drawing the following comic. The tines of this pen
+are hard to control. Although nothing that practice can&apos;t solve, I wish I had a platform to post hobby work to keep me closer
+to the early struggles and improvements of future.
+&lt;img src=&quot;http://files.explosm.net/comics/Dave/Ryan-Guest-Comic.gif&quot; alt=&quot;this&quot;&gt;&lt;/p&gt;
+&lt;p&gt;An attempt at a single frame needing basic shapes and I run out of fingers trying to count irregularities. It is fun to notice
+how arcs and lines as simplified in both the drawings convey emotion. The original seems casual about the episode. While my attempt
+appears to carry a different mood. A taunt. Should be useful to use eyebrows this way when I need that look.&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&quot;gatsby-resp-image-figure&quot; style=&quot;&quot;&gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 690px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/blog/static/08d0a178afcfc53818edc1e710a31ef6/93719/2020-04-20-lucifers-pen-cyanide-dream.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75.14450867052024%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAPABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAEFAgT/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAAF57GSygH//xAAbEAABBAMAAAAAAAAAAAAAAAABAAIEEQMQFP/aAAgBAQABBQIx8a52U6O0Kwd//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAGhAAAQUBAAAAAAAAAAAAAAAAAAEQESFBkf/aAAgBAQAGPwLemlSI/wD/xAAbEAEAAgIDAAAAAAAAAAAAAAABABEhMUFRgf/aAAgBAQABPyGkYtFGg9iRbTuBaPEYhP/aAAwDAQACAAMAAAAQg8//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/ED//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/ED//xAAYEAEBAQEBAAAAAAAAAAAAAAABEQAhgf/aAAgBAQABPxDrkRyrKhF7xlA13OlS0ccBI5r0s3//2Q==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;!cyanide and happiness&quot;
+        title=&quot;!cyanide and happiness&quot;
+        src=&quot;/blog/static/08d0a178afcfc53818edc1e710a31ef6/15ec7/2020-04-20-lucifers-pen-cyanide-dream.jpg&quot;
+        srcset=&quot;/blog/static/08d0a178afcfc53818edc1e710a31ef6/9ac50/2020-04-20-lucifers-pen-cyanide-dream.jpg 173w,
+/blog/static/08d0a178afcfc53818edc1e710a31ef6/8d48c/2020-04-20-lucifers-pen-cyanide-dream.jpg 345w,
+/blog/static/08d0a178afcfc53818edc1e710a31ef6/15ec7/2020-04-20-lucifers-pen-cyanide-dream.jpg 690w,
+/blog/static/08d0a178afcfc53818edc1e710a31ef6/af659/2020-04-20-lucifers-pen-cyanide-dream.jpg 1035w,
+/blog/static/08d0a178afcfc53818edc1e710a31ef6/89b2d/2020-04-20-lucifers-pen-cyanide-dream.jpg 1380w,
+/blog/static/08d0a178afcfc53818edc1e710a31ef6/93719/2020-04-20-lucifers-pen-cyanide-dream.jpg 4000w&quot;
+        sizes=&quot;(max-width: 690px) 100vw, 690px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&quot;gatsby-resp-image-figcaption&quot;&gt;!cyanide and happiness&lt;/figcaption&gt;
+  &lt;/figure&gt; &lt;/p&gt;
+&lt;p&gt;Alphabets are easier, I practiced for an hour daily for a few days. I still can&apos;t control the pressure during the down-strokes
+and stay gentle during the up-strokes which yield really pleasing effects.&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&quot;gatsby-resp-image-figure&quot; style=&quot;&quot;&gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 690px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/blog/static/a612790521bc00176fdb8ba88ad619e5/de062/2020-04-20-lucifers-pen-flex-practice.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 58.95953757225434%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAMABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIEA//EABUBAQEAAAAAAAAAAAAAAAAAAAAB/9oADAMBAAIQAxAAAAG1EU1IyP/EABoQAQABBQAAAAAAAAAAAAAAAAEAAgMQERL/2gAIAQEAAQUCc9TcquI//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAFBABAAAAAAAAAAAAAAAAAAAAIP/aAAgBAQAGPwJf/8QAGRAAAwEBAQAAAAAAAAAAAAAAAAERITFB/9oACAEBAAE/IeimlPxDdGMh/9oADAMBAAIAAwAAABAzL//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8QP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8QP//EABsQAAMAAwEBAAAAAAAAAAAAAAABESExQWHR/9oACAEBAAE/EGjRlcbwi9Emt+JmsS0TiTLm/T//2Q==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;flex practice&quot;
+        title=&quot;flex practice&quot;
+        src=&quot;/blog/static/a612790521bc00176fdb8ba88ad619e5/15ec7/2020-04-20-lucifers-pen-flex-practice.jpg&quot;
+        srcset=&quot;/blog/static/a612790521bc00176fdb8ba88ad619e5/9ac50/2020-04-20-lucifers-pen-flex-practice.jpg 173w,
+/blog/static/a612790521bc00176fdb8ba88ad619e5/8d48c/2020-04-20-lucifers-pen-flex-practice.jpg 345w,
+/blog/static/a612790521bc00176fdb8ba88ad619e5/15ec7/2020-04-20-lucifers-pen-flex-practice.jpg 690w,
+/blog/static/a612790521bc00176fdb8ba88ad619e5/af659/2020-04-20-lucifers-pen-flex-practice.jpg 1035w,
+/blog/static/a612790521bc00176fdb8ba88ad619e5/89b2d/2020-04-20-lucifers-pen-flex-practice.jpg 1380w,
+/blog/static/a612790521bc00176fdb8ba88ad619e5/de062/2020-04-20-lucifers-pen-flex-practice.jpg 2878w&quot;
+        sizes=&quot;(max-width: 690px) 100vw, 690px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&quot;gatsby-resp-image-figcaption&quot;&gt;flex practice&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;</content:encoded><author>oilyfood@protonmail.com</author></item><item><title><![CDATA[Thread Communication simulation]]></title><description><![CDATA[Let's say we have:  A buffer of limited size. A couple of producers. A couple of consumers. What happens when producers try to fill the…]]></description><link>https://ltbringer.github.io/blog/thread-communication-simulation</link><guid isPermaLink="false">https://ltbringer.github.io/blog/thread-communication-simulation</guid><category><![CDATA[scala]]></category><category><![CDATA[parallel]]></category><pubDate>Sun, 19 Apr 2020 18:30:00 GMT</pubDate><content:encoded>&lt;p&gt;Let&apos;s say we have: &lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;A buffer of limited size.&lt;/li&gt;
 &lt;li&gt;A couple of producers.&lt;/li&gt;
@@ -2763,93 +2852,4 @@ Friend&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Tom&lt;span 
 Friend&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Jerry&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;: feel &lt;span class=&quot;token function&quot;&gt;free&lt;/span&gt; to pass
 Friend&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Tom&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;: feel &lt;span class=&quot;token function&quot;&gt;free&lt;/span&gt; to pass
 &lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;em&gt;fin.&lt;/em&gt;&lt;/p&gt;</content:encoded><author>oilyfood@protonmail.com</author></item><item><title><![CDATA[Lucifer's pen]]></title><description><![CDATA[This year around February mid, I was introduced to mountainofink.com. The blog itself is aesthetically pleasing and my friend happened to…]]></description><link>https://ltbringer.github.io/blog/lucifers-pen</link><guid isPermaLink="false">https://ltbringer.github.io/blog/lucifers-pen</guid><category><![CDATA[calligraphy]]></category><pubDate>Sun, 19 Apr 2020 18:30:00 GMT</pubDate><content:encoded>&lt;p&gt;This year around February mid, I was introduced to &lt;a href=&quot;https://www.mountainofink.com/&quot;&gt;mountainofink.com&lt;/a&gt;. The blog itself is aesthetically pleasing and my friend happened to show me a collection of inks with passion I barely understood, but it stirred out a memory that I didn&apos;t think I&apos;ll revisit. You may remember it as a &lt;em&gt;satisfying&lt;/em&gt; gif on popular social media.&lt;/p&gt;
-&lt;div class=&quot;gatsby-resp-iframe-wrapper&quot; style=&quot;padding-bottom: 56.25%; position: relative; height: 0; overflow: hidden; &quot; &gt; &lt;iframe src=&quot;https://www.youtube.com/embed/ihbsJMjIFD0&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen=&quot;&quot; style=&quot; position: absolute; top: 0; left: 0; width: 100%; height: 100%; &quot;&gt;&lt;/iframe&gt; &lt;/div&gt;
-&lt;p&gt;I remember watching this longer than I&apos;d like to admit, something about the symmetry, the flow, the flexing tines of the nib. Having met an old memory again, I felt an inspiration for calligraphy.&lt;/p&gt;
-&lt;h2 id=&quot;supplies&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#supplies&quot; aria-label=&quot;supplies permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Supplies&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;Brause Steno Nib.&lt;/li&gt;
-&lt;li&gt;Pilot Iroshizuku - Take Sumi. (Standard dark ink, works with dip and fountain pens)&lt;/li&gt;
-&lt;li&gt;Artangle The Almond Branches By Vincent Van Gogh Hardcover Plain A5 Size Premium Notebook (190 gsm sheets)&lt;/li&gt;
-&lt;li&gt;KABEER ART Dip Pen Oblique Calligraphy Pen Holder Set Of 1 (Nib Holder)&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&quot;fooling-around&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#fooling-around&quot; aria-label=&quot;fooling around permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Fooling around&lt;/h2&gt;
-&lt;p&gt;I like the humour in cyanide and happiness comics. Here is an attempt at drawing the following comic. The tines of this pen
-are hard to control. Although nothing that practice can&apos;t solve, I wish I had a platform to post hobby work to keep me closer
-to the early struggles and improvements of future.
-&lt;img src=&quot;http://files.explosm.net/comics/Dave/Ryan-Guest-Comic.gif&quot; alt=&quot;this&quot;&gt;&lt;/p&gt;
-&lt;p&gt;An attempt at a single frame needing basic shapes and I run out of fingers trying to count irregularities. It is fun to notice
-how arcs and lines as simplified in both the drawings convey emotion. The original seems casual about the episode. While my attempt
-appears to carry a different mood. A taunt. Should be useful to use eyebrows this way when I need that look.&lt;/p&gt;
-&lt;p&gt;&lt;figure class=&quot;gatsby-resp-image-figure&quot; style=&quot;&quot;&gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 690px; &quot;
-    &gt;
-      &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/blog/static/08d0a178afcfc53818edc1e710a31ef6/93719/2020-04-20-lucifers-pen-cyanide-dream.jpg&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-    &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 75.14450867052024%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAPABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAEFAgT/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAAF57GSygH//xAAbEAABBAMAAAAAAAAAAAAAAAABAAIEEQMQFP/aAAgBAQABBQIx8a52U6O0Kwd//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAGhAAAQUBAAAAAAAAAAAAAAAAAAEQESFBkf/aAAgBAQAGPwLemlSI/wD/xAAbEAEAAgIDAAAAAAAAAAAAAAABABEhMUFRgf/aAAgBAQABPyGkYtFGg9iRbTuBaPEYhP/aAAwDAQACAAMAAAAQg8//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/ED//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/ED//xAAYEAEBAQEBAAAAAAAAAAAAAAABEQAhgf/aAAgBAQABPxDrkRyrKhF7xlA13OlS0ccBI5r0s3//2Q==&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;!cyanide and happiness&quot;
-        title=&quot;!cyanide and happiness&quot;
-        src=&quot;/blog/static/08d0a178afcfc53818edc1e710a31ef6/15ec7/2020-04-20-lucifers-pen-cyanide-dream.jpg&quot;
-        srcset=&quot;/blog/static/08d0a178afcfc53818edc1e710a31ef6/9ac50/2020-04-20-lucifers-pen-cyanide-dream.jpg 173w,
-/blog/static/08d0a178afcfc53818edc1e710a31ef6/8d48c/2020-04-20-lucifers-pen-cyanide-dream.jpg 345w,
-/blog/static/08d0a178afcfc53818edc1e710a31ef6/15ec7/2020-04-20-lucifers-pen-cyanide-dream.jpg 690w,
-/blog/static/08d0a178afcfc53818edc1e710a31ef6/af659/2020-04-20-lucifers-pen-cyanide-dream.jpg 1035w,
-/blog/static/08d0a178afcfc53818edc1e710a31ef6/89b2d/2020-04-20-lucifers-pen-cyanide-dream.jpg 1380w,
-/blog/static/08d0a178afcfc53818edc1e710a31ef6/93719/2020-04-20-lucifers-pen-cyanide-dream.jpg 4000w&quot;
-        sizes=&quot;(max-width: 690px) 100vw, 690px&quot;
-        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
-        loading=&quot;lazy&quot;
-      /&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;
-    &lt;figcaption class=&quot;gatsby-resp-image-figcaption&quot;&gt;!cyanide and happiness&lt;/figcaption&gt;
-  &lt;/figure&gt; &lt;/p&gt;
-&lt;p&gt;Alphabets are easier, I practiced for an hour daily for a few days. I still can&apos;t control the pressure during the down-strokes
-and stay gentle during the up-strokes which yield really pleasing effects.&lt;/p&gt;
-&lt;p&gt;&lt;figure class=&quot;gatsby-resp-image-figure&quot; style=&quot;&quot;&gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 690px; &quot;
-    &gt;
-      &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/blog/static/a612790521bc00176fdb8ba88ad619e5/de062/2020-04-20-lucifers-pen-flex-practice.jpg&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-    &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 58.95953757225434%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAMABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIEA//EABUBAQEAAAAAAAAAAAAAAAAAAAAB/9oADAMBAAIQAxAAAAG1EU1IyP/EABoQAQABBQAAAAAAAAAAAAAAAAEAAgMQERL/2gAIAQEAAQUCc9TcquI//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAFBABAAAAAAAAAAAAAAAAAAAAIP/aAAgBAQAGPwJf/8QAGRAAAwEBAQAAAAAAAAAAAAAAAAERITFB/9oACAEBAAE/IeimlPxDdGMh/9oADAMBAAIAAwAAABAzL//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8QP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8QP//EABsQAAMAAwEBAAAAAAAAAAAAAAABESExQWHR/9oACAEBAAE/EGjRlcbwi9Emt+JmsS0TiTLm/T//2Q==&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;flex practice&quot;
-        title=&quot;flex practice&quot;
-        src=&quot;/blog/static/a612790521bc00176fdb8ba88ad619e5/15ec7/2020-04-20-lucifers-pen-flex-practice.jpg&quot;
-        srcset=&quot;/blog/static/a612790521bc00176fdb8ba88ad619e5/9ac50/2020-04-20-lucifers-pen-flex-practice.jpg 173w,
-/blog/static/a612790521bc00176fdb8ba88ad619e5/8d48c/2020-04-20-lucifers-pen-flex-practice.jpg 345w,
-/blog/static/a612790521bc00176fdb8ba88ad619e5/15ec7/2020-04-20-lucifers-pen-flex-practice.jpg 690w,
-/blog/static/a612790521bc00176fdb8ba88ad619e5/af659/2020-04-20-lucifers-pen-flex-practice.jpg 1035w,
-/blog/static/a612790521bc00176fdb8ba88ad619e5/89b2d/2020-04-20-lucifers-pen-flex-practice.jpg 1380w,
-/blog/static/a612790521bc00176fdb8ba88ad619e5/de062/2020-04-20-lucifers-pen-flex-practice.jpg 2878w&quot;
-        sizes=&quot;(max-width: 690px) 100vw, 690px&quot;
-        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
-        loading=&quot;lazy&quot;
-      /&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;
-    &lt;figcaption class=&quot;gatsby-resp-image-figcaption&quot;&gt;flex practice&lt;/figcaption&gt;
-  &lt;/figure&gt;&lt;/p&gt;</content:encoded><author>oilyfood@protonmail.com</author></item></channel></rss>
+&lt;p&gt;&lt;em&gt;fin.&lt;/em&gt;&lt;/p&gt;</content:encoded><author>oilyfood@protonmail.com</author></item></channel></rss>
