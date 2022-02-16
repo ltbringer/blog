@@ -6,6 +6,7 @@
 <url> <loc>https://ltbringer.github.io/blog/blog/ch-1-what-is-the-immune-system</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/ch-3-what-are-your-cells</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/ch-01-investment-versus-speculation-results-to-be-expected-by-the-intelligent-investor</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://ltbringer.github.io/blog/blog/scaling-down</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/ch-10-batch-processing-with-unix-tools-part-1</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/building-a-linked-list-in-rust</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/after-effects-of-a-study-break</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -20,10 +21,10 @@
 <url> <loc>https://ltbringer.github.io/blog/blog/git-log-exclude-dirs-and-authors</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/sicp-exercises-1-6</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/sicp-exercises-1-0-1-5</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://ltbringer.github.io/blog/blog/negative-labels-for-classification</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://ltbringer.github.io/blog/blog/lucifers-pen</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://ltbringer.github.io/blog/blog/thread-communication-simulation</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/reanimation</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://ltbringer.github.io/blog/blog/negative-labels-for-classification</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://ltbringer.github.io/blog/blog/thread-communication-simulation</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://ltbringer.github.io/blog/blog/lucifers-pen</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/tags/engineering/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/tags/designing-data-intensive-applications/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/tags/investments/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -42,10 +43,11 @@
 <url> <loc>https://ltbringer.github.io/blog/blog/tags/scheme/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/tags/drracket/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/tags/sicp/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://ltbringer.github.io/blog/blog/tags/calligraphy/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/tags/scala/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/tags/parallel/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://ltbringer.github.io/blog/blog/tags/calligraphy/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/readings/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://ltbringer.github.io/blog/blog/productivity/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/experiments/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/programming/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://ltbringer.github.io/blog/blog/art/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
