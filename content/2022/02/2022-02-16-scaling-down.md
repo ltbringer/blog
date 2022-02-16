@@ -1,5 +1,5 @@
 ---
-date: 2021-12-11
+date: 2022-02-16
 title: "Scaling down"
 cover: "https://picsum.photos/seed/seed_n/1500/300"
 categories:
