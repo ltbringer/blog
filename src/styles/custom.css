@@ -170,3 +170,40 @@ strong, b {
 html:not([data-has-sidebar]) {
   --sl-content-width: 40rem !important;
 }
+
+/* Prevent page-wide horizontal scroll */
+body, html {
+  overflow-x: hidden;
+}
+
+/* Constrain images to container width */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Allow only content sections to scroll horizontally if needed */
+.sl-markdown-content img,
+.sl-markdown-content .katex-display,
+.sl-markdown-content pre,
+.sl-markdown-content code {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Specifically handle KaTeX math displays */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  display: block;
+}
+
+/* Handle wide content in article */
+.article-content {
+  overflow-x: visible;
+}
+
+.article-content > * {
+  max-width: 100%;
+}
