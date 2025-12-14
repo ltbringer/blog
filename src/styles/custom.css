@@ -1,0 +1,172 @@
+/* Import KaTeX CSS for math rendering */
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+/* Import Cormorant Garamond from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Metal&family=Sorts+Mill+Goudy:ital@0;1&display=swap');
+
+/* Apply Cormorant Garamond to the site */
+:root {
+  --sl-font: 'Cormorant Garamond', serif;
+  --sl-font-headings: 'Cormorant Garamond', serif;
+
+  /* Font sizes */
+  --sl-text-xs: 0.8125rem;    /* 13px */
+  --sl-text-sm: 0.875rem;     /* 14px */
+  --sl-text-base: 1.3rem;       /* 16px */
+  --sl-text-lg: 1.125rem;     /* 18px */
+  --sl-text-xl: 1.25rem;      /* 20px */
+  --sl-text-2xl: 1.5rem;      /* 24px */
+  --sl-text-3xl: 1.875rem;    /* 30px */
+  --sl-text-4xl: 2.25rem;     /* 36px */
+  --sl-text-5xl: 3rem;        /* 48px */
+  --sl-text-6xl: 3.75rem;     /* 60px */
+
+  /* Heading sizes */
+  --sl-text-h1: var(--sl-text-5xl);
+  --sl-text-h2: var(--sl-text-4xl);
+  --sl-text-h3: var(--sl-text-3xl);
+  --sl-text-h4: var(--sl-text-2xl);
+  --sl-text-h5: var(--sl-text-xl);
+  --sl-text-h6: var(--sl-text-lg);
+
+  /* Font weights */
+  --sl-font-weight-light: 300;
+  --sl-font-weight-normal: 400;
+  --sl-font-weight-medium: 500;
+  --sl-font-weight-semibold: 600;
+  --sl-font-weight-bold: 700;
+
+  /* Body text size and weight */
+  --sl-text-body: var(--sl-text-base);
+  --sl-font-weight-body: var(--sl-font-weight-normal);
+  --sl-font-weight-headings: var(--sl-font-weight-semibold);
+
+  /* Line heights */
+  --sl-line-height: 1.2;
+  --sl-line-height-tight: 1.2;
+  --sl-line-height-normal: 1.4;
+  --sl-line-height-relaxed: 1.75;
+  --sl-line-height-loose: 2;
+  --sl-line-height-headings: var(--sl-line-height-tight);
+  --sl-line-height-body: var(--sl-line-height-normal);
+}
+
+/* Dark mode colors. */
+:root {
+  --sl-color-accent-low: #002642;
+  --sl-color-accent: #006eb2;
+  --sl-color-accent-high: #99cfff;
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #e8edfd;
+  --sl-color-gray-2: #bcc1d4;
+  --sl-color-gray-3: #808aac;
+  --sl-color-gray-4: #4d5676;
+  --sl-color-gray-5: #2e3654;
+  --sl-color-gray-6: #1e2541;
+  --sl-color-black: #141724;
+}
+/* Light mode colors. */
+:root[data-theme='light'] {
+  --sl-color-bg: #c9daee;
+  --sl-color-accent-low: #b5dcff;
+  --sl-color-accent: #0070b5;
+  --sl-color-accent-high: #003559;
+  --sl-color-white: #141724;
+  --sl-color-gray-1: #1e2541;
+  --sl-color-gray-2: #2e3654;
+  --sl-color-gray-3: #4d5676;
+  --sl-color-gray-4: #808aac;
+  --sl-color-gray-5: #bcc1d4;
+  --sl-color-gray-6: #e8edfd;
+  --sl-color-gray-7: #f4f6fe;
+  --sl-color-black: #ffffff;
+}
+
+/* Apply font sizes and weights to elements */
+body {
+  font-size: var(--sl-text-body);
+  font-weight: var(--sl-font-weight-body);
+  line-height: var(--sl-line-height-body);
+}
+
+h1, .sl-markdown-content h1 {
+  font-size: var(--sl-text-h1);
+  font-weight: var(--sl-font-weight-headings);
+  line-height: var(--sl-line-height-headings);
+}
+
+h2, .sl-markdown-content h2 {
+  font-size: var(--sl-text-h2);
+  font-weight: var(--sl-font-weight-headings);
+  line-height: var(--sl-line-height-headings);
+}
+
+h3, .sl-markdown-content h3 {
+  font-size: var(--sl-text-h3);
+  font-weight: var(--sl-font-weight-headings);
+  line-height: var(--sl-line-height-headings);
+}
+
+h4, .sl-markdown-content h4 {
+  font-size: var(--sl-text-h4);
+  font-weight: var(--sl-font-weight-headings);
+  line-height: var(--sl-line-height-headings);
+}
+
+h5, .sl-markdown-content h5 {
+  font-size: var(--sl-text-h5);
+  font-weight: var(--sl-font-weight-headings);
+  line-height: var(--sl-line-height-headings);
+}
+
+h6, .sl-markdown-content h6 {
+  font-size: var(--sl-text-h6);
+  font-weight: var(--sl-font-weight-headings);
+  line-height: var(--sl-line-height-headings);
+}
+
+/* Additional text elements */
+p {
+  font-size: var(--sl-text-body);
+  line-height: var(--sl-line-height-body);
+}
+
+.sl-markdown-content {
+  font-size: var(--sl-text-body);
+}
+
+/* Code and pre elements */
+code {
+  font-size: var(--sl-text-sm);
+}
+
+pre {
+  font-size: var(--sl-text-sm);
+}
+
+/* Link styling */
+a {
+  font-weight: var(--sl-font-weight-medium);
+}
+
+/* Bold and strong elements */
+strong, b {
+  font-weight: var(--sl-font-weight-bold);
+}
+
+/* Light elements */
+.light {
+  font-weight: var(--sl-font-weight-light);
+}
+
+/* Override Starlight's justified text alignment and column layout */
+@media (min-width: 50rem) {
+  .article-content {
+    text-align: left !important;
+    column-count: 1 !important;
+  }
+}
+
+html:not([data-has-sidebar]) {
+  --sl-content-width: 40rem !important;
+}
