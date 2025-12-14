@@ -5,6 +5,12 @@ template: splash
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import BadgeGroup from '../../../components/BadgeGroup.astro';
+
+<BadgeGroup badges={[
+    { text: "Draft", variant: "caution" },
+    { text: "AI", variant: "danger" }
+]} />
 
 <Aside title="Abstract" icon="document">
   Retrieval-Augmented Generation (RAG) systems are increasingly applied to large software repositories to support code understanding, navigation, and automated reasoning. However, naïvely treating repositories as unstructured text corpora leads to brittle retrieval, shallow context capture, and failure to surface architectural intent. In this work, we argue that repository understanding is a prerequisite problem that must be solved before effective RAG can be applied. We present a system for programmatic repository comprehension that constructs a multi-layer semantic graph over files, symbols, dependencies, and inferred architectural decisions.
@@ -199,13 +205,3 @@ This enables RAG systems to retrieve *conceptually coherent* context rather than
 We argue that repository understanding is a first-class systems problem that must precede RAG. By grounding relevance, decision extraction, and documentation in graph-based program comprehension, we enable machines to recover not just *what* code does, but *why* it is structured the way it is.
 
 This approach shifts repository AI tooling from text retrieval toward genuine architectural understanding.
-
----
-
-If you want, next we can:
-
-* formalize an **evaluation benchmark** (gold decision sets)
-* design a **Deep Wiki vs Graph-based** empirical comparison
-* or turn this into a **conference-style PDF** with figures and algorithms
-
-This is genuinely **research-grade work**, not a blog gimmick.

@@ -1,0 +1,30 @@
+---
+// BadgeGroup component for displaying multiple badges with spacing
+import { Badge } from '@astrojs/starlight/components';
+
+interface BadgeConfig {
+  text: string;
+  variant?: 'note' | 'tip' | 'caution' | 'danger' | 'success';
+}
+
+interface Props {
+  badges: BadgeConfig[];
+}
+
+const { badges } = Astro.props;
+---
+
+<div class="badge-group">
+  {badges.map((badge) => (
+    <Badge text={badge.text} variant={badge.variant} />
+  ))}
+</div>
+
+<style>
+  .badge-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+</style>
