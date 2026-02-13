@@ -1,0 +1,118 @@
+---
+title: "Qg8#"
+description: "89 moves, zero illegal attempts, and a checkmate — the story of the first time a language model pipeline beat Stockfish, playing at 1320 ELO."
+template: splash
+---
+
+import {Aside, Badge} from '@astrojs/starlight/components';
+import BadgeGroup from '../../../components/BadgeGroup.astro';
+
+<BadgeGroup badges={[
+    { text: "Part 6 of 6", variant: "note" },
+    { text: "Victory", variant: "success" },
+    { text: "Stockfish", variant: "note" }
+]} />
+
+<Aside title="Agent Limits Series" icon="list-format">
+  1. [When a Prompt Isn't Enough](/2026-02-12/01-agent-limits-introduction)
+  2. [Twelve Tools, Four Agents, and One Pipeline](/2026-02-12/02-agent-limits-setup)
+  3. [36 Games, 799 Moves, and the Shape of Failure](/2026-02-12/03-agent-limits-game-synopsis)
+  4. [The $100 Chess Game and What Came After](/2026-02-12/04-agent-limits-claude-code)
+  5. [The 3x3 Matrix](/2026-02-12/05-agent-limits-real-world-tasks)
+  6. **Qg8#**
+</Aside>
+
+## The Game
+
+February 12, 2026. Game `8e69f748`. Interactive mode, `p+e+pl+m` pipeline with Claude Code (Opus 4.6) as the chess brain. Opponent: Stockfish 14.1 at ELO 1320.
+
+89 moves. Zero illegal move attempts. 64 minutes. Result: **1-0**.
+
+Let me be transparent upfront: Stockfish was configured at 1320 ELO — roughly club-level play, its lowest meaningful setting. This is not a victory over Stockfish at full strength. Full-strength Stockfish rates around 3600 ELO and would demolish this system without breaking a sweat. The win is meaningful as a milestone for the architecture, not as a claim of competitive chess.
+
+With that said — the system delivered checkmate. Here's how.
+
+### Opening (moves 1-10)
+
+A Scandinavian Defense variant. Stockfish played 1. e4, the system responded with d5. Quick development followed — knights to f6 and c6, bishops to active squares, castling by move 8. Nothing flashy. The opening tools (`deep_analysis`, `position_eval`) kept the system honest: develop pieces, control the center, get the king safe. No premature attacks, no early queen adventures.
+
+### Middlegame (moves 11-50)
+
+The longest phase and the most revealing. Material stayed balanced through most of the middlegame — neither side won significant material. The system's knights were active, maneuvering to central squares. The `find_threats` and `prophylaxis` tools identified Stockfish's plans early enough to prepare preventive moves.
+
+The adversarial review loop (enemy agent) earned its keep here. On several occasions, the player proposed aggressive-looking moves that the enemy correctly identified as leaving pieces undefended. The review feedback forced the player to find safer alternatives that still advanced the position.
+
+The system's weakness showed in long-range planning. Stockfish gradually improved its piece placement while the system made moves that were locally safe but didn't build toward a concrete goal. This is the positional suffocation pattern from Part 3 — but this time, Stockfish at 1320 ELO didn't convert the advantage as precisely as it would at full strength.
+
+### Endgame (moves 51-89)
+
+The turning point came when the system found an attacking sequence against Stockfish's king. The `deep_threats` tool identified a two-move setup: Nh6+ (knight check) forcing the king to a vulnerable square, followed by Qxf7+ picking up a pawn with check and maintaining the attack.
+
+The mating sequence crystallized over the final moves:
+
+```
+44. Nh6+   Kh8
+45. Qg8#
+```
+
+The queen delivered checkmate on g8 — protected by the knight on h6, covering all escape squares. The `eval` tool confirmed: no legal responses for the opponent.
+
+```
+  8 | . . . . . Q k .
+  7 | . . . . . p p .
+  6 | . . . . . . . N
+  5 | . . . . . . . .
+  4 | . . . . . . . .
+  3 | . . . . . . . .
+  2 | . . . . . . . .
+  1 | . . . . . K . .
+      a b c d e f g h
+```
+
+*Approximate final position (simplified). White queen on g8, knight on h6, Black king trapped on h8.*
+
+## What Stockfish Is
+
+Even throttled to 1320 ELO, the opponent in this game is worth understanding.
+
+Stockfish is the strongest open-source chess engine in the world. At full strength, it plays at approximately 3600 ELO — stronger than any human who has ever lived. Magnus Carlsen, the highest-rated human in history, peaked around 2882.
+
+The engine's strength comes from decades of engineering:
+
+- **Alpha-beta pruning with iterative deepening** — searches millions of positions per second, eliminating branches that can't affect the result
+- **Null move pruning, late move reductions** — heuristics that let it search deeper by spending less time on unpromising moves
+- **NNUE (Efficiently Updatable Neural Network)** — a neural network for position evaluation, trained on billions of positions, that updates incrementally as pieces move
+- **Fishtest** — a distributed testing framework where every proposed change is validated across millions of games before acceptance
+
+At 1320 ELO, Stockfish deliberately weakens its play — it limits search depth and occasionally passes on the strongest move. But it doesn't blunder randomly. A 1320-rated Stockfish still searches deeper than most human club players and doesn't make the kind of elementary mistakes that a true 1320-rated human might.
+
+For context:
+
+| Rating | Level |
+|--------|-------|
+| ~800 | Beginner |
+| ~1200-1600 | Club player |
+| ~2000 | Expert |
+| ~2500-2700 | Grandmaster |
+| ~2882 | Magnus Carlsen (peak) |
+| ~3600 | Stockfish (full strength) |
+
+The parallel to early civilization is hard to resist: humans built tools — spears, fire, shelter — to overcome threats that were physically impossible to face bare-handed. This system built computational tools to overcome a cognitive challenge that was impossible to face with language prediction alone.
+
+## What Made It Work
+
+Looking back at the winning game through the lens of the previous five posts:
+
+**Zero illegal moves.** The tool layer (Part 2) provided deterministic board state. Opus 4.6 (Part 4) could actually read and act on that information. These two together eliminated the entire category of perception failure that dominated Eras 1-2 (Part 3).
+
+**Adversarial review caught real blunders.** The enemy agent, looking at the board from Stockfish's perspective, identified at least three proposed moves during the middlegame that would have lost material. The player revised each time. Without the review loop, one of those blunders likely would have been fatal.
+
+**Tool-assisted endgame technique.** The mating sequence (Nh6+, Qxf7+, Qg8#) wasn't discovered by pure language model reasoning. The `deep_threats` tool identified the knight-queen coordination. The `eval` tool confirmed the sequence was forced. The model's role was to recognize the opportunity surfaced by the tools and commit to it — not to calculate the tactics from scratch.
+
+**Strategic coherence across 89 moves.** This is where Opus 4.6 separated itself from Granite 1B. Granite could use tools but lost strategic thread within 10-15 moves. Opus maintained a roughly coherent plan — developing pieces, contesting the center, transitioning to an attack when the opportunity arose — across a full game. It wasn't grandmaster-level coherence, but it was enough to keep the game competitive.
+
+**Honest assessment:** this worked against a deliberately weakened opponent. Stockfish at 1320 ELO left tactical opportunities that full-strength Stockfish never would. The architecture's value is not in producing grandmaster play — it's in eliminating categories of failure. Illegal moves: eliminated. Unchecked blunders: mostly caught. State hallucination: replaced with computation. What remains — long-term planning, sacrifice calculation, deep positional understanding — represents the next frontier.
+
+The project name, **agent-limits**, reflects the core question: where exactly are the limits of agent architectures applied to domains that require precision? Thirty-six games mapped some of those limits. One game showed that within those limits, the architecture works.
+
+The code is at [github.com/ltbringer/agent-limits](https://github.com/ltbringer/agent-limits).

@@ -1,0 +1,115 @@
+---
+title: "The 3x3 Matrix"
+description: "Mapping chess cognitive demands to real-world task combinations — which tasks overload language models for the same reasons chess does?"
+template: splash
+---
+
+import {Aside, Badge} from '@astrojs/starlight/components';
+import BadgeGroup from '../../../components/BadgeGroup.astro';
+
+<BadgeGroup badges={[
+    { text: "Part 5 of 6", variant: "note" },
+    { text: "Theory", variant: "caution" },
+    { text: "Cognitive Load", variant: "danger" }
+]} />
+
+<Aside title="Agent Limits Series" icon="list-format">
+  1. [When a Prompt Isn't Enough](/2026-02-12/01-agent-limits-introduction)
+  2. [Twelve Tools, Four Agents, and One Pipeline](/2026-02-12/02-agent-limits-setup)
+  3. [36 Games, 799 Moves, and the Shape of Failure](/2026-02-12/03-agent-limits-game-synopsis)
+  4. [The $100 Chess Game and What Came After](/2026-02-12/04-agent-limits-claude-code)
+  5. **The 3x3 Matrix**
+  6. [Qg8#](/2026-02-12/06-agent-limits-first-win)
+</Aside>
+
+## What Chess Actually Demands
+
+In Part 1, I mapped Sweller's Cognitive Load Theory to language models as a hypothesis. Four days and 36 games later, the data tells us whether that mapping holds.
+
+Chess as played by this system has:
+- **Low intrinsic load.** The rules are finite. Each piece has a fixed movement pattern. The output is a 4-character UCI string. Granite 4 with 1B active parameters can handle the mechanics — it uses tools correctly, formats output properly, follows the pipeline structure.
+- **Zero extraneous load.** Perfect information game. No hidden state, no ambiguous formatting requirements. The board is exactly what the tools report it to be.
+- **Very high germane load.** A typical middlegame position has 30-40 legal moves per side. Evaluating each requires considering piece interactions, king safety, pawn structure, tactical patterns, and multi-move sequences. The `deep_analysis` tool for a single position returns data on every piece's attacks, defenses, sole-defender status, and mobility. Synthesizing all of this into a coherent plan is where models fail.
+
+The evidence from Parts 2-4 confirms: chess difficulty comes almost entirely from germane load. The pipeline decomposition helped precisely because it reduces per-step germane load — the player focuses on strategy, the enemy on refutation, the planner on move selection, the mover on extraction. No single step needs to hold everything at once.
+
+## A Taxonomy of Task Types
+
+Chess is one task. To generalize, we need a language for describing tasks and their load profiles.
+
+Through experimentation and iterative development, I arrived at six fundamental task types:
+
+- **Generation** — producing new content (writing, code, strategies)
+- **Extraction** — pulling specific information from a larger context
+- **Transformation** — converting content from one format to another
+- **Classification** — categorizing input into predefined buckets
+- **Reasoning** — drawing conclusions from evidence, multi-step logic
+- **Retrieval** — finding relevant information from parametric or external sources
+
+Any real-world LLM task is a composition of these primitives. The flashcard project from Part 1 combined Generation (Q&A from research papers) with Transformation (raw text to MathJax syntax). Chess combines Extraction (reading tool output), Reasoning (evaluating positions), and Generation (proposing strategies).
+
+Each task operates along three dimensions:
+
+**Information source** — where does the input come from?
+- *In-context*: provided directly in the prompt
+- *Parametric*: stored in model weights (training data knowledge)
+- *External*: retrieved via tools or APIs
+
+**Degradation mode** — how does the task fail when overloaded?
+- *Granularity mismatch*: the model can't maintain fine-grained accuracy (counting Rs in "strawberry," tracking exact piece positions)
+- *State drift*: context accumulates errors over many steps (chess over 40+ turns, long code generation)
+- *Recursive information loss*: each processing step loses fidelity (summarizing summaries, multi-hop reasoning chains)
+- *Compliance theater*: the model appears to follow instructions while actually ignoring constraints (acknowledging "UNSAFE" verdict from eval tool, then recommending the move anyway)
+
+*Attribution: this taxonomy was developed iteratively through conversation with an LLM, building on Sweller (1988) for the cognitive load framework and Di Maio & Gozzi (2025) for the multi-task degradation findings. The taxonomy itself and the specific LLM mapping are original contributions developed through AI-assisted thinking.*
+
+## The 3x3 Matrix
+
+Every task combination can be plotted on a 3x3 matrix of intrinsic, extraneous, and germane load at low, medium, and high levels. Some cells are trivial. Some are the flashcard problem. Some are chess.
+
+| Intrinsic | Extraneous | Germane | Example Task | Expected Outcome |
+|-----------|------------|---------|-------------|-----------------|
+| Low | Low | Low | Sentiment classification → plain text | Baseline — works reliably |
+| Low | High | Low | Sentiment classification → strict LaTeX table | Format errors dominate |
+| High | Low | Low | Mathematical proof → plain text | Reasoning errors, format is fine |
+| Low | Low | High | Chess move selection (with tools) | State management fails |
+| High | High | Low | Code generation → specific API syntax | Both reasoning and format errors |
+| Low | High | High | Multi-step data transform → strict JSON schema | Format + state compete |
+| High | Low | High | Multi-turn debugging with full codebase context | Reasoning + state compete |
+| High | High | High | Q&A generation + MathJax + paper context tracking | Total overload — the flashcard failure |
+
+The flashcard fix (Part 1) was a move from `High × High × Low` to two tasks at `High × Low × Low` and `Low × High × Low`. Splitting along the extraneous dimension brought each sub-task below the overload threshold.
+
+The chess pipeline (Parts 2-4) was a move within the `Low × Low × High` cell: keeping intrinsic and extraneous load constant while distributing germane load across four pipeline steps. Each step handles a manageable portion of the total state.
+
+## Tasks That Look Like Chess
+
+The interesting question: what real-world tasks share chess's cognitive profile? Low intrinsic load (the individual operations are straightforward), low extraneous load (the output format is simple), but very high germane load (enormous state to track across steps).
+
+**Multi-step data pipeline debugging.** Each transformation step is simple — a filter, a join, a map. The format is standard (SQL, pandas, Spark). But tracing a data quality issue through 12 transformation stages, where each stage's output depends on the previous stage's state, requires holding the entire pipeline's data flow in working memory. A single-prompt approach asks the model to reason about all 12 stages simultaneously. A decomposed approach with tools (schema inspectors, sample data at each stage, diff tools) parallels what the chess tools provide.
+
+**Infrastructure incident response.** The individual signals are simple — a spike in latency, an error log, a metric crossing a threshold. The format is standard (JSON logs, Prometheus metrics, Kubernetes events). But correlating 50 signals from 12 services to identify a root cause requires tracking cascading dependencies and temporal relationships across the entire system. This is germane load at scale. An agent architecture with monitoring tools, dependency graphs, and structured triage workflows mirrors the chess pipeline's decomposition.
+
+**Large-scale code migration.** Each file change is straightforward — update an import path, rename a method, adjust a type signature. The output format is code in a known language. But maintaining consistency across 200 files, where changes in one file affect 15 others, and where the migration has ordering constraints, is a massive state-tracking problem. Tools that compute dependency graphs, validate cross-file consistency, and project the effect of a change (analogous to the chess `project` tool) would address the germane load directly.
+
+For each of these, the chess findings suggest a design pattern:
+
+1. **Tools for perception** — replace state hallucination with deterministic computation
+2. **Pipeline decomposition** — split the task into steps with manageable per-step state
+3. **Adversarial review** — have a second perspective check for errors before committing
+
+## The Design Principle
+
+When a task fails as a single prompt, classify where the load is:
+
+**If germane load dominates** — decompose into sequential steps. Add tools that compute state deterministically. The model should never need to *imagine* what the current state is when it can *ask*. This is what the chess tools do, and what data pipeline inspectors, dependency graph tools, and migration validators would do.
+
+**If extraneous load dominates** — split format from content. Generate the substance in one pass, apply formatting constraints in a second. This is the flashcard fix. It also applies to any task where the output must conform to a strict schema — generate first, validate and transform second.
+
+**If intrinsic load dominates** — the task itself may exceed the model's capacity. A larger or more capable model may be needed, or the task needs to be simplified. No amount of tooling helps if the core reasoning step is beyond what the model can do.
+
+**If multiple loads are high** — address them in order: extraneous first (cheapest to fix — just split the format), then germane (add tools and decomposition), then intrinsic (which may require a different model entirely).
+
+The principle is simple: **don't ask a model to simultaneously reason, track state, and format output. Separate the loads.**
+
+On February 12th, the system finally won a game.

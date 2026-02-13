@@ -1,0 +1,89 @@
+---
+title: "When a Prompt Isn't Enough"
+description: "The origin story of a project that started with broken LaTeX, led through cognitive load theory, and ended with a language model playing chess."
+template: splash
+---
+
+import {Aside, Badge} from '@astrojs/starlight/components';
+import BadgeGroup from '../../../components/BadgeGroup.astro';
+
+<BadgeGroup badges={[
+    { text: "Part 1 of 6", variant: "note" },
+    { text: "AI", variant: "danger" },
+    { text: "Chess", variant: "note" }
+]} />
+
+<Aside title="Agent Limits Series" icon="list-format">
+  1. **When a Prompt Isn't Enough**
+  2. [Twelve Tools, Four Agents, and One Pipeline](/2026-02-12/02-agent-limits-setup)
+  3. [36 Games, 799 Moves, and the Shape of Failure](/2026-02-12/03-agent-limits-game-synopsis)
+  4. [The $100 Chess Game and What Came After](/2026-02-12/04-agent-limits-claude-code)
+  5. [The 3x3 Matrix](/2026-02-12/05-agent-limits-real-world-tasks)
+  6. [Qg8#](/2026-02-12/06-agent-limits-first-win)
+</Aside>
+
+## A Formatting Problem That Wouldn't Stay Fixed
+
+It started with flashcards.
+
+I had a side project that generated Q&A flashcards from research papers. An LLM would read the paper, produce questions and answers, and send them to a messaging app for daily review. The papers were heavy on math — probability theory, information theory, machine learning fundamentals — so the questions naturally included equations.
+
+The messaging app supported a restrictive subset of LaTeX via MathJax. Not standard LaTeX — a specific syntax with specific escape rules. The equations had to render inline, in a chat bubble, on a phone screen.
+
+Zero-shot prompting failed. The model would produce LaTeX that looked correct in a standard renderer but broke in the app's MathJax parser. Missing double-backslashes, wrong delimiter pairs, unsupported commands. I added few-shot examples showing the exact syntax. It helped for the specific patterns in the examples and broke on anything novel.
+
+I tried detailed instructions. I tried system prompts enumerating every syntax rule. Every configuration would work for a while, then a new paper would trigger a new edge case, and the formatting would break again.
+
+Then I tried something different: I split the task across two models. GPT 5.2 handled the intellectual work — reading the paper, generating questions and answers, reasoning about what to ask. A second call to GPT-4o-mini handled only the formatting — taking the raw Q&A output and converting it to the app's specific MathJax syntax.
+
+It worked. Not "worked better" — worked perfectly. The formatting has not failed since.
+
+This was a small fix to a small problem. But it raised a question I couldn't stop thinking about: **what task combinations are fundamentally incompatible within a single generation pass?**
+
+## Cognitive Load Theory, But for Machines
+
+The flashcard fix had a familiar shape. In educational psychology, John Sweller's Cognitive Load Theory (1988) describes three types of mental load that compete for working memory:
+
+- **Intrinsic load** — the inherent difficulty of the material itself. Multiplication is lower intrinsic load than differential equations. You can't reduce it without changing the task.
+- **Extraneous load** — load imposed by how the material is presented. A poorly designed textbook adds extraneous load. Good instructional design minimizes it.
+- **Germane load** — the effort of building mental schemas and integrating new information with what you already know. This is the "productive" load — the thinking that leads to understanding.
+
+CLT's central prediction: when the sum of all three loads exceeds working memory capacity, performance degrades. Not gracefully — it collapses. The learner can't process any of the information effectively.
+
+The mapping to language models was suggestive:
+
+- **Intrinsic load** maps to a task's inherent complexity. Sentiment classification (two categories, clear signal) is low intrinsic load. Open-ended creative generation with multiple constraints is high.
+- **Extraneous load** maps to formatting and syntax constraints. Outputting plain text is low extraneous load. Outputting valid JSON nested inside MathJax inside a specific markdown dialect is high.
+- **Germane load** maps to the state and context the model must hold simultaneously. A single classification requires minimal context. Tracking a conversation history, a constraint list, and a multi-step plan while generating a coherent response requires holding many interacting pieces at once.
+
+The flashcard failure was textbook overload: high intrinsic load (reasoning about research papers) plus high extraneous load (MathJax syntax rules) exceeded what a single generation pass could handle. Splitting them — one pass for reasoning, one for formatting — brought each pass below the threshold.
+
+Di Maio and Gozzi (2025) formalized something similar in "Degradation of Multi-Task Prompting Across Six NLP Tasks and LLM Families." They found that combining tasks in a single prompt degrades performance in predictable, measurable ways — and that the degradation patterns are consistent across model families. The load isn't just additive; certain task combinations interfere with each other.
+
+*A note on attribution: the mapping from Sweller's CLT to LLM behavior was something I developed through conversation with an LLM (ChatGPT). I mention this because it fits the series' theme — exploring what LLMs can and can't do includes being transparent about using them as thinking partners for framework development.*
+
+## Why Games
+
+If task overload was real and predictable, I wanted to study it in a domain where failure was unambiguous. Most NLP tasks have soft boundaries — a "pretty good" summary is hard to distinguish from a "good" one. I needed a domain where every error was visible and every outcome was objective.
+
+Games fit. Games require computation, not just fluency. You can't bluff your way through a chess game the way you can bluff your way through a vague summary.
+
+Chess specifically offered something unusual: a clean separation of the three load types.
+
+- **Intrinsic load: low.** The rules of chess are finite and simple. Each piece has a fixed movement pattern. The game has complete, well-defined rules.
+- **Extraneous load: zero.** Chess is a perfect information game. No hidden state, no probabilistic outcomes. The output format is a 4-character UCI string like `e2e4`.
+- **Germane load: very high.** Despite simple rules, the state space is enormous. A typical middlegame position has 30-40 legal moves. Evaluating each requires considering piece interactions, tactics, king safety, pawn structure, and multi-move sequences. Grandmasters study for decades to build the pattern recognition that manages this load.
+
+This makes chess an almost perfect instrument for studying germane load in isolation. If a model fails at chess, it's not because the rules are hard or the output format is tricky. It's because the state management exceeds what the model can handle.
+
+## What This Series Covers
+
+Over four days in February 2026, I built a system that lets language models play chess against Stockfish. The system evolved through several architectures — from a single prompt to a twelve-tool, four-agent pipeline with adversarial review.
+
+The numbers: **36 games, 799 moves, 19 illegal move attempts, 2 wins** (one of them real).
+
+This is a personal project. Small-scale, no claims about building a competitive chess engine. The goal is understanding limits — where agent architectures break down in domains that require precision, and what the shape of that breakdown reveals about how to design better systems.
+
+Part 2 describes the architecture. Part 3 analyzes the data from 36 games. Part 4 explains how cost constraints led to an unexpected breakthrough. Part 5 maps the findings back to real-world tasks using a cognitive load taxonomy. Part 6 tells the story of the first win.
+
+Before any of this mattered, I had to build something.

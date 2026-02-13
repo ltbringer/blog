@@ -1,0 +1,129 @@
+---
+title: "36 Games, 799 Moves, and the Shape of Failure"
+description: "How the system broke across 36 games, how failures evolved, and what the data reveals about LLM chess."
+template: splash
+---
+
+import {Aside, Badge} from '@astrojs/starlight/components';
+import BadgeGroup from '../../../components/BadgeGroup.astro';
+
+<BadgeGroup badges={[
+    { text: "Part 3 of 6", variant: "note" },
+    { text: "Data", variant: "caution" },
+    { text: "Chess", variant: "note" }
+]} />
+
+<Aside title="Agent Limits Series" icon="list-format">
+  1. [When a Prompt Isn't Enough](/2026-02-12/01-agent-limits-introduction)
+  2. [Twelve Tools, Four Agents, and One Pipeline](/2026-02-12/02-agent-limits-setup)
+  3. **36 Games, 799 Moves, and the Shape of Failure**
+  4. [The $100 Chess Game and What Came After](/2026-02-12/04-agent-limits-claude-code)
+  5. [The 3x3 Matrix](/2026-02-12/05-agent-limits-real-world-tasks)
+  6. [Qg8#](/2026-02-12/06-agent-limits-first-win)
+</Aside>
+
+## The Numbers
+
+Every game was logged to SQLite — moves, analysis, illegal attempts, timestamps. Here's what 36 games produced:
+
+| Metric | Value |
+|--------|-------|
+| Total games | 36 |
+| White wins (LLM) | 1 |
+| White wins (Stockfish) | 1 |
+| Black wins (Stockfish) | 12 |
+| Incomplete (crashes/timeouts) | 22 |
+| Total moves | 799 |
+| Illegal move attempts | 19 |
+| Longest game | 102 moves |
+| Winning game | 89 moves |
+
+The 22 incomplete games are not all failures of chess reasoning — most are infrastructure crashes during development: model timeouts, API configuration errors, and the chaos of migrating between providers. The 14 completed games tell a clearer story.
+
+## Three Eras of Failure
+
+The 36 games cluster into three distinct periods, each with a different dominant failure mode.
+
+### Era 1: February 9 — First Contact
+
+**3 games. Pipeline: `strategist+planner+mover`. 6 illegal moves across 2 games.**
+
+The strategist would announce "knight to f7 creates a devastating fork" — and the move would be illegal because the knight couldn't reach f7 from its current square. The strategist hallucinated tactics wholesale. It would reference squares by name, claim tactical patterns existed, and the planner would dutifully try to execute the hallucinated plan.
+
+The mover, with only 64 tokens and no tools, had no way to catch these errors. It faithfully extracted whatever the planner recommended.
+
+Illegal move rate: roughly 4 per game. Games lasted under 30 moves before forfeit or collapse.
+
+### Era 2: February 10 — The Chaos Day
+
+**19 games. Multiple pipelines and models. Most games: 0 moves.**
+
+This was the day of infrastructure migration. I tried OpenRouter's free tier models (heavy rate limits, frequent timeouts). I tried local models — qwen, gemma, different Granite variants. Most of these games appear in the database as 0-move entries: the model failed to produce any valid output at all.
+
+The few games that did produce moves showed a new failure pattern: small local models (1B parameters) would repeat the same two moves in a loop. Move 1: e2e4. Move 3: move the same piece back. Move 5: move it forward again. The model had no strategic memory — each turn was a fresh, context-free decision that happened to oscillate.
+
+One game from this era stands out: Stockfish playing white against `strategist+planner+mover`, winning in 29 moves with a knight checkmate (Nce5#). That game's 1 illegal move on the LLM side was the pipeline's best showing during Era 2.
+
+Illegal move rate: 5 total across the few games that produced moves. Most games never started.
+
+### Era 3: February 11-12 — Interactive Mode
+
+**14 games. Pipeline: `interactive(p+e+pl+m)` with Claude Code. Games: 44-102 moves.**
+
+Everything changed. The interactive mode, with Claude Code (Opus 4.6) acting as the chess brain through CLI commands, eliminated entire categories of failure. Zero illegal moves across all 14 games. Every game reached the middlegame. Several reached proper endgames.
+
+The losses in this era look fundamentally different from Era 1-2. No piece hanging on move 3. No hallucinated tactics. Instead: Stockfish slowly building a space advantage, restricting piece mobility, converting a small edge into a winning endgame over 40+ moves. These are the losses of a system that plays real chess but plays it at a lower level than its opponent.
+
+Illegal move rate: 0 across 14 games and hundreds of moves.
+
+## The Failure Taxonomy
+
+Across all 36 games, failures fell into four categories:
+
+### Illegal Moves (19 total)
+
+All 19 illegal move attempts came from Eras 1-2. The breakdown:
+- Hallucinated destinations (piece can't reach that square)
+- Pinned piece moves (piece is pinned to king but model doesn't detect the pin)
+- Castling through check or with moved pieces
+
+These failures are perception failures — the model cannot accurately represent the board. They were completely eliminated once the tool layer was paired with a model capable of reading tool output reliably (Opus 4.6 in Era 3).
+
+### Blunders (material losses without compensation)
+
+Early games: pieces hanging by move 3, queen traded for a pawn with no follow-up, knights moving to squares covered by opponent pawns. Later games: blunders became rarer and subtler — missing a tactic 2 moves deep, failing to notice a piece is overloaded.
+
+The adversarial review loop (enemy agent) caught some blunders before they reached the board. But the review is only as good as the reviewer — the enemy agent sometimes missed real threats and sometimes rejected sound moves for phantom reasons.
+
+### Positional Suffocation
+
+Stockfish's dominant winning method in Era 3. The pattern:
+1. Equal opening — both sides develop, castle, contest the center
+2. Stockfish gains a small spatial advantage — a pawn on the 5th rank, a knight on an outpost
+3. The LLM system doesn't recognize the slow squeeze. It makes "safe" moves that are passively losing
+4. Stockfish converts the space advantage into a piece invasion, then material gain, then checkmate
+
+This failure is strategic, not tactical. The tools provide accurate board information. The model reads the information correctly. But it cannot formulate and execute a multi-move plan to counteract Stockfish's long-term pressure. Each turn is locally reasonable but globally aimless.
+
+### Crashes and Timeouts (22 incomplete games)
+
+Mostly infrastructure issues from Era 2: model not responding, API timeouts, configuration errors during provider migration. A few were genuine resource exhaustion — the tool loop consuming too many calls without converging on a decision.
+
+## What Changed
+
+The evolution across eras maps specific architectural changes to specific failure modes eliminated:
+
+| Change | Failure Mode Eliminated |
+|--------|------------------------|
+| Tool layer (12 analysis tools) | Hallucinated board states |
+| Adversarial review (enemy agent) | Some tactical blunders caught pre-move |
+| Perspective separation (own/opponent views) | Missing opponent threats |
+| Mandatory `deep_analysis` first | Overlooking piece responsibilities |
+| CHECKMATE OVERRIDE rule | Walking into forced mate |
+| Opus 4.6 replacing Granite 1B | Illegal moves (all 19 eliminated), tool output misreading |
+
+The pattern is clear: each layer of scaffolding removes a category of failure, pushing the system's performance ceiling upward. But each layer also reveals the next failure mode — the one that was previously masked by the more catastrophic failures above it.
+
+After tools eliminated illegal moves, blunders became visible. After review caught some blunders, positional suffocation became the dominant loss pattern. The shape of failure kept changing as the system improved.
+
+The longest games all have one thing in common: Claude Code was playing.

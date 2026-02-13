@@ -1,0 +1,149 @@
+---
+title: "Twelve Tools, Four Agents, and One Pipeline"
+description: "The architecture of a system that gives a language model eyes, critics, and a structured workflow for playing chess against Stockfish."
+template: splash
+---
+
+import {Aside, Badge} from '@astrojs/starlight/components';
+import BadgeGroup from '../../../components/BadgeGroup.astro';
+
+<BadgeGroup badges={[
+    { text: "Part 2 of 6", variant: "note" },
+    { text: "Architecture", variant: "tip" },
+    { text: "Code", variant: "success" }
+]} />
+
+<Aside title="Agent Limits Series" icon="list-format">
+  1. [When a Prompt Isn't Enough](/2026-02-12/01-agent-limits-introduction)
+  2. **Twelve Tools, Four Agents, and One Pipeline**
+  3. [36 Games, 799 Moves, and the Shape of Failure](/2026-02-12/03-agent-limits-game-synopsis)
+  4. [The $100 Chess Game and What Came After](/2026-02-12/04-agent-limits-claude-code)
+  5. [The 3x3 Matrix](/2026-02-12/05-agent-limits-real-world-tasks)
+  6. [Qg8#](/2026-02-12/06-agent-limits-first-win)
+</Aside>
+
+## The Stack
+
+The entire system runs locally. No cloud APIs, no rate limits, no per-token costs.
+
+- **LLM**: IBM Granite 4 (7B mixture-of-experts, 1B active parameters, Mamba-2 hybrid) via Ollama
+- **Chess engine**: Stockfish 14.1, throttled to ELO 1320
+- **Board management**: python-chess for move validation, FEN/PGN handling, UCI integration
+- **CLI**: Typer with two modes — automated (`main`) and interactive (`interactive`)
+- **State persistence**: SQLite via `sqlite-utils` for game logging and interactive mode state
+
+A game between the full pipeline and Stockfish is a single command:
+
+```bash
+uv run python main.py main --white p+e+pl+m --black stockfish
+```
+
+That `p+e+pl+m` is a composite agent pipeline: **player**, then **enemy**, then **planner**, then **mover** — four separate LLM calls per chess move, each with a different role.
+
+Why local: Granite 4 with 1B active parameters runs on consumer hardware (RTX 3070Ti, 8GB VRAM). This means unlimited experimentation — 36 games, hundreds of tool calls per game, zero cost. Reproducibility is also better when the model weights don't change between runs.
+
+## The Tool Layer
+
+The core insight behind the tool layer: **every tool replaces a category of hallucination with deterministic computation.**
+
+A language model asked to list legal moves will invent moves that look plausible but violate pin constraints, castling rules, or basic piece geometry. A tool backed by python-chess returns the exact legal move list, computed from the bitboard representation. There is nothing to hallucinate.
+
+The twelve tools group into five categories:
+
+**Perception** — what's on the board right now?
+- `legal_moves` — every legal move for both sides, grouped by piece and square
+- `captures` — available captures with the captured piece identified
+- `score` — material count (P=1, N=3, B=3, R=5, Q=9) for both sides
+
+**Evaluation** — how good is a specific move?
+- `eval` — single-move safety analysis: attackers, defenders, static exchange evaluation (SEE), trap detection, and whether the opponent can deliver checkmate after this move
+- `compare` — side-by-side evaluation of multiple candidate moves with a summary table
+- `position_eval` — king safety, mobility, pawn structure, tactical patterns (pins, forks, skewers, batteries), influence zones
+
+**Tactics** — what threats and patterns exist?
+- `find_threats` — your moves that create forks, pins, skewers, discovered attacks, ranked by offensive potential
+- `deep_threats` — two-move tactical combinations: setup move + follow-up tactic
+- `prophylaxis` — opponent's strongest threats and your best preventive responses
+- `classify_last_move` — what type of move did the opponent just play? Which of your pieces are newly attacked?
+
+**Projection** — what happens if I play this sequence?
+- `project` — apply up to 6 moves and return the resulting position
+
+**Structure** — what are my pieces actually doing?
+- `deep_analysis` — per-piece defense/attack graph showing what each piece defends (sole defender?), what it attacks, safety, mobility, and best moves
+
+All twelve tools dispatch through a single OpenAI-compatible function call:
+
+```json
+{
+  "name": "analyze_board",
+  "parameters": {
+    "action": "eval",
+    "moves": ["e2e4"]
+  }
+}
+```
+
+The model calls `analyze_board` with an action name and optional parameters. The dispatcher routes to the appropriate python-chess computation and returns structured results. A typical move involves 20-40 tool calls as the model explores the position.
+
+## The Agents
+
+Each agent in the pipeline has a different configuration — different system prompt, different perspective on the board, different responsibility.
+
+**player** (perspective: own side)
+
+Sees its own pieces' legal moves grouped by piece. Proposes a strategy with a structured output:
+
+```
+STRATEGY: <1-2 sentence plan>
+WIN_CONDITION: <concrete goal>
+KEY_MOVE: <UCI move that starts executing the strategy>
+REASONING: <why this is safe against a strong opponent>
+```
+
+The player has access to all 12 tools (up to 60 tool calls per turn). Its system prompt assumes the opponent is 2700+ ELO — "no wishful thinking, if a line depends on the opponent making a mistake, reject it."
+
+**enemy** (perspective: opponent's side, reviewer)
+
+Sees the opponent's pieces and legal moves. Receives the player's proposed strategy and tries to destroy it. Rates each proposal:
+
+```
+WEAKNESS: <vulnerability in the proposal, or "none found">
+PUNISHMENT: <concrete move sequence exploiting the weakness>
+RATING: <brilliant|good|interesting|dubious|mistake|blunder>
+```
+
+The enemy is marked `is_reviewer: true` with `max_review_loops: 3`. A negative rating (dubious, mistake, blunder) loops the pipeline back to the player with the enemy's critique. The player must revise and resubmit. This can repeat up to three times before the system forces a decision.
+
+**planner** (no perspective restriction)
+
+Receives the surviving strategy (either approved by the enemy or the last attempt after review loops exhaust). Finds the single best concrete move that advances the strategy. Checks `deep_analysis` for sole-defender constraints, runs `compare` on candidates, verifies with `eval`.
+
+**mover** (64 tokens, no tools)
+
+The simplest agent. Receives the full analysis from prior steps and extracts a single UCI move string. No tools, tiny token budget. Its only job is to read the recommended move and output it cleanly.
+
+The perspective separation is worth emphasizing: the player and enemy literally see different sides of the board. A knight maneuver that looks active from the player's perspective might walk into a fork that's obvious when you see the opponent's pieces. The architecture of looking at the same position from two sides catches real mistakes.
+
+## The Pipeline
+
+The composite agent pipeline executes sequentially: each step's output becomes the next step's input.
+
+```
+player → enemy → planner → mover
+  ↑         |
+  └─────────┘  (review loop: negative rating sends back to player)
+```
+
+The `+` syntax at the CLI level (`p+e+pl+m`) defines this pipeline. Any combination of agents can be composed — `thinker+mover` is a simpler two-step pipeline, `attacker+defender+mover` uses different analysis perspectives.
+
+**Review loop:** When the enemy rates a strategy as dubious, mistake, or blunder, the system loops back to the player with feedback: "The enemy found this weakness, this punishment line. Revise your strategy." The player gets the critique, the board tools, and another chance. After three rejections, the last attempt passes through regardless.
+
+**Safety nets layered throughout:**
+
+- **CHECKMATE OVERRIDE**: If `eval` or `compare` shows the opponent can deliver checkmate after a candidate move, that move is unconditionally forbidden. Every agent prompt includes this rule at highest priority.
+- **Sole-defender warnings**: `deep_analysis` identifies pieces that are the only defender of a valuable piece. Moving a sole defender is a common blunder pattern — the tool flags it before it happens.
+- **Mandatory first call**: Every tool-using agent must call `deep_analysis` as its first tool invocation, forcing it to understand piece responsibilities before considering any moves.
+- **Illegal move retry**: If the mover produces a move that isn't in `board.legal_moves`, the entire pipeline re-runs with feedback about what went wrong.
+
+The architecture looked good on paper. Then Stockfish started playing.

@@ -1,0 +1,101 @@
+---
+title: "The $100 Chess Game and What Came After"
+description: "How cost constraints, rate limits, and a creative use of Claude Code transformed a failing experiment into a human-AI partnership against Stockfish."
+template: splash
+---
+
+import {Aside, Badge} from '@astrojs/starlight/components';
+import BadgeGroup from '../../../components/BadgeGroup.astro';
+
+<BadgeGroup badges={[
+    { text: "Part 4 of 6", variant: "note" },
+    { text: "Claude Code", variant: "danger" },
+    { text: "Interactive", variant: "tip" }
+]} />
+
+<Aside title="Agent Limits Series" icon="list-format">
+  1. [When a Prompt Isn't Enough](/2026-02-12/01-agent-limits-introduction)
+  2. [Twelve Tools, Four Agents, and One Pipeline](/2026-02-12/02-agent-limits-setup)
+  3. [36 Games, 799 Moves, and the Shape of Failure](/2026-02-12/03-agent-limits-game-synopsis)
+  4. **The $100 Chess Game and What Came After**
+  5. [The 3x3 Matrix](/2026-02-12/05-agent-limits-real-world-tasks)
+  6. [Qg8#](/2026-02-12/06-agent-limits-first-win)
+</Aside>
+
+## The Cost Problem
+
+The first version of the pipeline used Anthropic's Sonnet 4.5 API. Four LLM calls per move (player, enemy, planner, mover), each step making up to 60 tool calls, each tool call returning structured analysis that the model processes before the next call. A single chess move could consume thousands of tokens across all four pipeline steps.
+
+Multiply that by 40+ moves per game, and the costs escalated fast. Over 4-5 games against Stockfish, the API bill reached roughly $100. The games weren't even competitive — Stockfish at full strength was absolute dominance, winning in 15-20 moves while the pipeline burned through tokens trying to formulate losing strategies.
+
+This wasn't sustainable. If I wanted to run dozens of games to actually learn something about failure modes, I needed a fundamentally different cost structure.
+
+## The Provider Tour
+
+**OpenRouter** offered free-tier access to various models. The rate limits were heavy — sometimes 1 request per minute for free models. I built `_api_call_with_retry` with exponential backoff to handle the throttling. The pipeline would grind through a game over hours, most of the time spent waiting for rate limits to reset. Some games timed out entirely, contributing to the 22 incomplete games in the database.
+
+**Local models** on an RTX 3070Ti (8GB VRAM) were the next attempt. Ollama made it trivial to download and run models — Granite 4 (1B active), Qwen variants, Gemma. Cost: $0. Speed: fast enough.
+
+But small models couldn't play chess. Granite 4 with 1B active parameters could use tools — it would call `legal_moves`, read the output, call `eval` on a candidate. The mechanics of tool use worked. What didn't work was strategic reasoning. The model would repeat the same two moves in a loop, or propose "strategies" that were just restatements of the current position with no concrete plan.
+
+The database from February 10 tells the story: 19 games, most with 0 moves logged. The models either crashed, timed out, or produced output so malformed that no valid move could be extracted.
+
+The gap was clear: a 1B-parameter model could operate the tools but couldn't reason strategically about what the tools told it. Something larger was needed. But larger meant more expensive — the original problem.
+
+## The Claude Code Breakthrough
+
+The solution came from an unexpected direction. I was already on the Claude Max plan — a flat subscription that includes Claude Code, Anthropic's CLI tool powered by Opus 4.6. Claude Code runs bash commands. Its usage resets every few hours.
+
+If the chess game had a CLI, Claude Code could play through terminal commands. No additional API cost. No rate limits beyond the subscription's usage window. And Opus 4.6, at several hundred billion parameters, had the reasoning capacity that Granite 1B lacked.
+
+The missing piece was a game mode designed for this interaction pattern. The automated pipeline ran everything in a single process — start game, loop through moves until game over. Claude Code needed something different: a step-by-step interface where each CLI command advances one step, and state persists between commands.
+
+I built interactive mode. SQLite stores the full game state between calls. The pipeline steps become explicit CLI commands:
+
+```bash
+# Start a new game as white
+uv run python main.py interactive start --pipeline p+e+pl+m --opponent stockfish
+
+# See the current step's prompt and board context
+uv run python main.py interactive show <game_id>
+
+# Use a read-only analysis tool
+uv run python main.py interactive tool <game_id> legal_moves
+uv run python main.py interactive tool <game_id> eval --moves e2e4
+uv run python main.py interactive tool <game_id> deep_threats
+
+# Submit a response for the current pipeline step
+uv run python main.py interactive respond <game_id> "STRATEGY: ..."
+
+# Check game status
+uv run python main.py interactive status <game_id>
+```
+
+Each command reads state from SQLite, performs one action, writes state back. The pipeline progression (player → enemy → planner → mover) happens across separate CLI invocations. Claude Code sees the system prompt, the board state, the available tools, and reasons through the position before responding.
+
+## How the Partnership Works
+
+The interaction flow for a single move:
+
+1. `show` — Claude Code sees the current step's system prompt, the board position, and context from previous steps
+2. `tool` (repeated) — Claude Code calls analysis tools: `deep_analysis` first (mandatory), then `position_eval`, `find_threats`, `compare` on candidates, `eval` on the top pick
+3. `respond` — Claude Code submits the step's output (strategy for player, critique for enemy, move for planner/mover)
+4. The system advances to the next pipeline step, or if the review loop triggers, back to a previous step
+
+Claude Code goes through the same pipeline roles as the automated system — player proposes, enemy critiques, planner refines, mover extracts. But Opus 4.6 brings something Granite 1B couldn't: the ability to read tool output, synthesize information across multiple tool calls, and form a coherent strategic plan.
+
+The results were immediate and dramatic:
+
+| Metric | Automated (Granite 1B) | Interactive (Claude Code) |
+|--------|----------------------|--------------------------|
+| Avg game length | 8 moves (completed games) | 73 moves |
+| Illegal moves per game | 0-5 | 0 |
+| Games reaching middlegame | ~30% | 100% |
+| Games reaching endgame | 0% | ~50% |
+| Longest game | 29 moves | 102 moves |
+
+Every interactive game had zero illegal moves. This wasn't just the tools — Granite could use tools too. The difference was in reading comprehension. When `eval` returned a verdict of "UNSAFE" with a detailed explanation of why, Opus 4.6 actually processed that information and changed its plan. Granite 1B would sometimes acknowledge the tool output in its reasoning and then recommend the unsafe move anyway.
+
+The interactive games also showed a qualitative shift in loss patterns. Instead of blundering pieces early, the system maintained material parity into the middlegame. Losses came from Stockfish's positional grinding — the kind of slow, strategic squeeze that requires long-term planning to counter.
+
+This raised a question I hadn't planned on: which real-world tasks share chess's cognitive profile?
