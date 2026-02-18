@@ -1,0 +1,147 @@
+---
+title: "3,467 Moves Under a Microscope"
+description: "Every LLM move from 68 games, evaluated by Stockfish — what the data reveals about where language models reason well and where they fall apart."
+template: splash
+---
+
+import {Aside, Badge} from '@astrojs/starlight/components';
+import BadgeGroup from '../../../components/BadgeGroup.astro';
+
+<BadgeGroup badges={[
+    { text: "Part 7 of 7", variant: "note" },
+    { text: "Data Analysis", variant: "caution" },
+    { text: "Move Quality", variant: "note" }
+]} />
+
+<Aside title="Agent Limits Series" icon="list-format">
+  1. [When a Prompt Isn't Enough](/2026-02-07/01-agent-limits-introduction)
+  2. [Twelve Tools, Four Agents, and One Pipeline](/2026-02-08/02-agent-limits-setup)
+  3. [36 Games, 799 Moves, and the Shape of Failure](/2026-02-09/03-agent-limits-game-synopsis)
+  4. [The $100 Chess Game and What Came After](/2026-02-10/04-agent-limits-claude-code)
+  5. [The 3x3 Matrix](/2026-02-11/05-agent-limits-real-world-tasks)
+  6. [Qg8#](/2026-02-12/06-agent-limits-first-win)
+  7. **3,467 Moves Under a Microscope**
+</Aside>
+
+## The Method
+
+Part 6 ended with a win. One game, 89 moves, checkmate. A satisfying conclusion — and a sample size of one.
+
+I wanted to know what the full dataset looked like. Not the story of a single victory, but the statistical reality across every game the system played. So I built `analyze_games.py` — a retrospective analyzer that feeds every LLM move back through Stockfish at depth 16 and asks: how good was this, really?
+
+The method is straightforward. For each of the 3,467 LLM moves across 68 completed games, the analyzer:
+
+1. Evaluates the position before the move (Stockfish's best move and score)
+2. Evaluates the position after the move (resulting score)
+3. Computes centipawn loss (CPL) — how much worse the chosen move is compared to Stockfish's best
+4. Classifies the move using chess.com-style categories: brilliant, great, good, inaccuracy, mistake, blunder
+5. For blunders, identifies the type: allows mate, hanging piece, missed tactic, bad trade, or positional
+
+Two metrics matter. CPL tells you how far each move deviates from optimal play. Classification tells you whether that deviation is harmless or catastrophic.
+
+## The Numbers
+
+| Metric | Value |
+|--------|-------|
+| Games | 68 |
+| LLM moves analyzed | 3,467 |
+| Median CPL | 28 |
+| Best-move rate | 27.5% |
+| Top-3 rate | 55.1% |
+| Blunder rate | 26.3% |
+| Accuracy | 44.3% |
+
+The classification breakdown:
+
+| Category | Count | % |
+|----------|-------|---|
+| Brilliant | 66 | 1.9% |
+| Great | 622 | 17.9% |
+| Good | 848 | 24.5% |
+| Inaccuracy | 449 | 13.0% |
+| Mistake | 571 | 16.5% |
+| Blunder | 911 | 26.3% |
+
+One caveat on averages: the mean CPL is 6,719. That number is meaningless. Mate scores register as 100,000 centipawns each, and with 911 blunders — many of them allowing mate — the average gets dragged into absurdity. The median of 28 is the real signal. Most moves are roughly reasonable. The problem is the tail.
+
+## What Works
+
+Three patterns stand out where the LLM plays competently.
+
+**Opening play.** Moves 1-10: 89.6% accuracy, 0.9% blunder rate, 56.8% best-move rate. The top-3 rate starts at 98%. This is pattern matching — openings are the most heavily represented phase in training data, and standard developing moves (knights to f3/c3, pawns to e4/d4, castling) are well-trodden territory. The model isn't calculating here. It's interpolating from millions of games it's seen.
+
+**Captures over quiet moves.** Captures achieve 59.1% accuracy with a 14.6% blunder rate. Quiet moves: 41.5% accuracy, 28.5% blunder rate. Captures are concrete — there's a piece on the target square, the exchange consequences are bounded, and the reasoning chain is short. "Take the piece, check if the recapture loses material." Quiet moves require positional judgment with longer horizons. The model is measurably better at the bounded problem.
+
+**Drawing.** 11 games ended in draws, averaging 101 moves each, with the lowest median CPL of any result category at 30.2. Conservative, survival-oriented play avoids the decisive mistakes that plague aggressive attempts. The system is better at not losing than at winning.
+
+## The Cliff
+
+This is the core finding. Move quality doesn't degrade gradually — it falls off a cliff.
+
+| Move range | Blunder % | Accuracy | Mate blunders (% of moves) |
+|------------|-----------|----------|----------------------------|
+| 1-10 | 0.9% | 89.6% | 0.0% |
+| 11-20 | 6.3% | 68.2% | 0.8% |
+| 21-30 | 14.5% | 53.7% | 4.4% |
+| 31-40 | 22.1% | 43.3% | 8.7% |
+| 41-50 | 30.8% | 36.5% | 15.2% |
+| 51-60 | 38.2% | 31.4% | 22.8% |
+| 61-70 | 42.7% | 29.3% | 33.1% |
+| 71+ | 47.5% | 28.1% | 44.2% |
+
+From 90% accuracy to 28%. From zero mate blunders to nearly half of all moves walking into checkmate.
+
+This isn't a sample size artifact. The endgame phase (1,194 moves) has a 50.8% blunder rate. Even in games the LLM *won*, the endgame blunder rate is 36.4%. The system won those games despite its endgame play, not because of it — it built enough advantage in the middlegame that Stockfish at 1320 ELO couldn't recover from the remaining competent moves.
+
+The cliff maps to a phase transition in the game itself. Openings have few pieces in play and well-known theory. Middlegames have many pieces but also many pawns providing structure. Endgames have few pieces, open boards, and every move matters — king activity, pawn races, zugzwang. The branching factor doesn't necessarily increase, but the required calculation depth does. The model has to reason about sequences it has never seen, in positions where pattern matching fails.
+
+## How They Lose
+
+The blunder taxonomy tells the rest of the story.
+
+| Blunder type | Count | % of blunders |
+|--------------|-------|---------------|
+| Allows mate | 745 | 50.3% |
+| Positional | 436 | 29.4% |
+| Missed tactic | 134 | 9.0% |
+| Hanging piece | 107 | 7.2% |
+| Bad trade | 60 | 4.0% |
+
+Half of all blunders are allowing mate. Not hanging a piece, not making a bad trade — walking directly into checkmate.
+
+The phase breakdown makes it worse: 570 of the 745 allows-mate blunders occur in the endgame. With few pieces on the board, the king is exposed. Mating nets require calculating 2-3 moves ahead — "if I go here, the queen goes there, and I have no escape squares." The model cannot do this reliably. It evaluates each move locally — is this square safe? — without simulating the forcing sequence that follows.
+
+This is the failure mode I documented in real-time during interactive games (Part 6's predecessor sessions). The model would accumulate a material advantage, enter the endgame, and then walk its king into a mating net because it evaluated the destination square without considering the opponent's reply. The aggregate data confirms it isn't anecdotal.
+
+## What the Tools Change
+
+The tool system (Part 2) was designed to offload perception from the model. Does it help?
+
+| Configuration | Blunder rate |
+|---------------|-------------|
+| With tools | 19.3% |
+| Without tools | 25.4% |
+
+Tools reduce the blunder rate by about six percentage points. That's real but modest.
+
+The interesting finding: median CPL is slightly *worse* with tools. This suggests the tools help the model avoid catastrophic errors (hanging pieces, missing obvious captures) but don't improve the quality of its strategic decisions. The model with tools makes fewer terrible moves but doesn't make better good moves.
+
+This makes sense mechanically. The tools provide information — legal moves, captures, piece safety, material count. Information helps with perception: "is this piece attacked?" But the endgame failure isn't a perception problem. The model can see that a square is attacked. It can't calculate that moving there leads to a forced mate in three. The limitation isn't information. It's computation.
+
+## The Pattern
+
+Part 1 framed this project through cognitive load theory. Part 5 built a 3x3 matrix mapping task characteristics to expected LLM performance. The move quality data validates both frameworks and sharpens them into a single pattern.
+
+**Pattern matching = strong.** Openings, standard developing moves, book positions. The model interpolates from training data. 89.6% accuracy, 0.9% blunder rate. This is the top-left of the Part 5 matrix — low intrinsic load, abundant training signal.
+
+**Concrete forced decisions = strong.** Captures, recaptures, checks. The reasoning chain is short and bounded. 59.1% accuracy on captures. The search space is small enough for the model's approximate reasoning to find good moves.
+
+**Novel multi-step calculation = catastrophic.** Endgames, mating nets, pawn races. The model must reason about positions it hasn't seen, calculating 2-4 moves ahead in open positions where every move matters. 50.8% blunder rate. 44.2% of late-game moves allow mate. This is the bottom-right of the matrix — high germane load, insufficient training signal, extrapolation required.
+
+The system doesn't degrade gracefully. It goes from 90% accuracy to 28%. From 0% mate blunders to 44%. The cliff is the boundary between what language models can retrieve and what they must compute. On one side, they're surprisingly competent. On the other, they're worse than a beginner.
+
+The tools push the cliff back slightly — they convert some computation into perception. But they can't eliminate it. The frontier moves a few percentage points, and then the same wall reappears.
+
+3,467 moves. The data says what it says.
+
+The code is at [github.com/ltbringer/agent-limits](https://github.com/ltbringer/agent-limits).
