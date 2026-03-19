@@ -1,0 +1,63 @@
+---
+import { renderMermaidSVG } from "../../scripts/beautiful-mermaid/index.mjs";
+
+const { chart } = Astro.props;
+
+let svg = await renderMermaidSVG(chart);
+// Remove hardcoded white background so page bg shows through
+svg = svg.replace(/background-color:\s*white/g, "background-color: transparent");
+---
+
+<div class="mermaid-diagram" set:html={svg} />
+
+<style>
+  .mermaid-diagram {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .mermaid-diagram :global(svg) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Dark theme overrides — matches site palette from custom.css */
+  .mermaid-diagram :global(.node rect),
+  .mermaid-diagram :global(.node polygon),
+  .mermaid-diagram :global(.node circle),
+  .mermaid-diagram :global(.node ellipse) {
+    fill: #2e2c28 !important;
+    stroke: #4d4a46 !important;
+  }
+  .mermaid-diagram :global(.nodeLabel),
+  .mermaid-diagram :global(.node .label) {
+    color: #e8e4de !important;
+    fill: #e8e4de !important;
+  }
+  .mermaid-diagram :global(.node .label foreignObject div) {
+    color: #e8e4de !important;
+  }
+  .mermaid-diagram :global(.edgeLabel) {
+    background-color: #1a1816 !important;
+    font-size: 0.8rem;
+  }
+  .mermaid-diagram :global(.edgeLabel rect) {
+    fill: #1a1816 !important;
+    opacity: 1 !important;
+  }
+  .mermaid-diagram :global(.edgeLabel .label),
+  .mermaid-diagram :global(.edgeLabel .label foreignObject div) {
+    color: #d4d0ca !important;
+    fill: #d4d0ca !important;
+  }
+  .mermaid-diagram :global(.edgePath .path) {
+    stroke: #7a7672 !important;
+  }
+  .mermaid-diagram :global(marker path) {
+    fill: #7a7672 !important;
+    stroke: #7a7672 !important;
+  }
+</style>

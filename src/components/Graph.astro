@@ -1,0 +1,344 @@
+---
+/**
+ * Graph.astro — renders a decision tree as a hand-crafted SVG.
+ *
+ * Usage:
+ *   <Graph tree={{
+ *     label: "Question?",
+ *     children: [
+ *       { edge: "No", node: { label: "Answer A" } },
+ *       { edge: "Yes", node: { label: "Sub-question?", children: [...] } },
+ *     ],
+ *     stack: true,  // optional: lay children out vertically instead of side-by-side
+ *   }} />
+ */
+
+const { tree } = Astro.props;
+
+// --- Theme (matches site's warm charcoal palette) ---
+const theme = {
+  nodeFill: "#2e2c28",
+  nodeBorder: "#4d4a46",
+  nodeText: "#e8e4de",
+  nodeSubtext: "#b0aca6",
+  nodeShadow: "rgba(0,0,0,0.4)",
+  lineColor: "#7a7672",
+  edgeLabelBg: "#1a1816",
+  edgeLabelText: "#d4d0ca",
+  accentBorder: "#c4a35a",
+  font: "system-ui, sans-serif",
+  fontSize: 15,
+  radius: 10,
+};
+
+// --- Layout constants ---
+const NODE_PAD_X = 30;
+const NODE_PAD_Y = 18;
+const LINE_HEIGHT = 22;
+const V_GAP = 80;
+const H_GAP = 100;
+const ARROW_SIZE = 7;
+
+// --- Measure text width (approximate) ---
+function textWidth(text, fontSize = theme.fontSize) {
+  return text.length * fontSize * 0.58;
+}
+
+// --- Calculate node dimensions ---
+function nodeDimensions(node) {
+  const lines = node.label.split("\\n");
+  const subtitle = node.subtitle ? node.subtitle.split("\\n") : [];
+  const allLines = [...lines, ...subtitle];
+  const maxLineW = Math.max(...allLines.map((l) => textWidth(l)));
+  const w = Math.max(maxLineW + NODE_PAD_X * 2, 100);
+  const h = allLines.length * LINE_HEIGHT + NODE_PAD_Y * 2;
+  return { w, h, lines, subtitle };
+}
+
+// --- Compute bounding box of a laid-out subtree ---
+function treeBounds(node) {
+  let minX = node.x, maxX = node.x + node.w;
+  let minY = node.y, maxY = node.y + node.h;
+  if (node.children) {
+    for (const child of node.children) {
+      const cb = treeBounds(child.node);
+      minX = Math.min(minX, cb.minX);
+      maxX = Math.max(maxX, cb.maxX);
+      minY = Math.min(minY, cb.minY);
+      maxY = Math.max(maxY, cb.maxY);
+    }
+  }
+  return { minX, maxX, minY, maxY };
+}
+
+function treeHeight(node) {
+  const b = treeBounds(node);
+  return b.maxY - b.minY;
+}
+
+// --- Shift entire subtree by dx, dy ---
+function shiftTree(node, dx, dy = 0) {
+  node.x += dx;
+  node.cx += dx;
+  node.y += dy;
+  if (node.children) {
+    for (const child of node.children) {
+      shiftTree(child.node, dx, dy);
+    }
+  }
+}
+
+// --- Recursive layout ---
+function layoutTree(node, x = 0, y = 0) {
+  const dim = nodeDimensions(node);
+  const result = { ...node, ...dim, x: 0, y, cx: 0, children: [] };
+
+  if (!node.children || node.children.length === 0) {
+    result.subtreeWidth = dim.w;
+    result.x = x;
+    result.cx = x + dim.w / 2;
+    return result;
+  }
+
+  const isStacked = node.stack === true;
+
+  if (isStacked) {
+    // --- Stacked layout: children placed vertically, one below the other ---
+    const laidOutChildren = [];
+    let currentY = y + dim.h + V_GAP;
+    let maxSubtreeWidth = 0;
+
+    for (let i = 0; i < node.children.length; i++) {
+      const child = node.children[i];
+      const laid = layoutTree(child.node, 0, currentY);
+      laidOutChildren.push({ edge: child.edge, node: laid });
+
+      const h = treeHeight(laid);
+      currentY += h + V_GAP;
+      maxSubtreeWidth = Math.max(maxSubtreeWidth, laid.subtreeWidth);
+    }
+
+    // Center each child subtree horizontally
+    for (const child of laidOutChildren) {
+      const cb = treeBounds(child.node);
+      const childMidX = (cb.minX + cb.maxX) / 2;
+      const targetMidX = x + Math.max(maxSubtreeWidth, dim.w) / 2;
+      shiftTree(child.node, targetMidX - childMidX);
+    }
+
+    result.subtreeWidth = Math.max(maxSubtreeWidth, dim.w);
+    result.cx = x + result.subtreeWidth / 2;
+    result.x = result.cx - dim.w / 2;
+    result.children = laidOutChildren;
+
+  } else {
+    // --- Horizontal layout: children placed side by side ---
+    const laidOutChildren = [];
+    let totalChildrenWidth = 0;
+
+    for (let i = 0; i < node.children.length; i++) {
+      const child = node.children[i];
+      const laid = layoutTree(child.node, 0, y + dim.h + V_GAP);
+      laidOutChildren.push({ edge: child.edge, node: laid });
+      totalChildrenWidth += laid.subtreeWidth;
+      if (i < node.children.length - 1) totalChildrenWidth += H_GAP;
+    }
+
+    // Position children left to right
+    let childX = x;
+    for (const child of laidOutChildren) {
+      shiftTree(child.node, childX - child.node.x);
+      childX += child.node.subtreeWidth + H_GAP;
+    }
+
+    result.subtreeWidth = Math.max(totalChildrenWidth, dim.w);
+
+    // Center this node over its children span
+    const firstChildCx = laidOutChildren[0].node.cx;
+    const lastChildCx = laidOutChildren[laidOutChildren.length - 1].node.cx;
+    result.cx = (firstChildCx + lastChildCx) / 2;
+    result.x = result.cx - dim.w / 2;
+
+    // If node is wider than children span, shift children to center under node
+    if (dim.w > totalChildrenWidth) {
+      const targetCx = x + dim.w / 2;
+      const currentChildrenCx = (laidOutChildren[0].node.cx + laidOutChildren[laidOutChildren.length - 1].node.cx) / 2;
+      const shift = targetCx - currentChildrenCx;
+      for (const child of laidOutChildren) {
+        shiftTree(child.node, shift);
+      }
+      result.x = x;
+      result.cx = x + dim.w / 2;
+    }
+
+    result.children = laidOutChildren;
+  }
+
+  return result;
+}
+
+// --- Render ---
+const laid = layoutTree(tree);
+const b = treeBounds(laid);
+const pad = 20;
+const svgW = b.maxX - b.minX + pad * 2;
+const svgH = b.maxY - b.minY + pad * 2;
+const ox = -b.minX + pad;
+const oy = -b.minY + pad;
+
+// Collect all nodes and edges for rendering
+function collectNodes(node, nodes = [], edges = []) {
+  nodes.push(node);
+  if (node.children) {
+    for (const child of node.children) {
+      edges.push({
+        fromX: node.cx,
+        fromY: node.y + node.h,
+        toX: child.node.cx,
+        toY: child.node.y,
+        label: child.edge,
+      });
+      collectNodes(child.node, nodes, edges);
+    }
+  }
+  return { nodes, edges };
+}
+
+const { nodes, edges } = collectNodes(laid);
+---
+
+<div class="graph-diagram">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox={`0 0 ${svgW} ${svgH}`}
+    width={svgW}
+    style={`max-width: 100%; height: auto;`}
+  >
+    <defs>
+      <filter id="shadow" x="-4%" y="-4%" width="112%" height="120%">
+        <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color={theme.nodeShadow} />
+      </filter>
+      <marker
+        id="arrowhead"
+        markerWidth={ARROW_SIZE}
+        markerHeight={ARROW_SIZE}
+        refX={ARROW_SIZE}
+        refY={ARROW_SIZE / 2}
+        orient="auto"
+      >
+        <polygon
+          points={`0 0, ${ARROW_SIZE} ${ARROW_SIZE / 2}, 0 ${ARROW_SIZE}`}
+          fill={theme.lineColor}
+        />
+      </marker>
+    </defs>
+
+    <g transform={`translate(${ox}, ${oy})`}>
+      {/* Edges */}
+      {edges.map((e) => {
+        const midY = e.fromY + (e.toY - e.fromY) / 2;
+        const path = e.fromX === e.toX
+          ? `M ${e.fromX} ${e.fromY} L ${e.toX} ${e.toY - ARROW_SIZE}`
+          : `M ${e.fromX} ${e.fromY} L ${e.fromX} ${midY} L ${e.toX} ${midY} L ${e.toX} ${e.toY - ARROW_SIZE}`;
+        return (
+          <g>
+            <path
+              d={path}
+              fill="none"
+              stroke={theme.lineColor}
+              stroke-width="1.5"
+              marker-end="url(#arrowhead)"
+            />
+            {e.label && (
+              <g>
+                <rect
+                  x={((e.fromX + e.toX) / 2) - textWidth(e.label) / 2 - 6}
+                  y={midY - 10}
+                  width={textWidth(e.label) + 12}
+                  height={18}
+                  rx="4"
+                  fill={theme.edgeLabelBg}
+                  stroke={theme.nodeBorder}
+                  stroke-width="0.5"
+                />
+                <text
+                  x={(e.fromX + e.toX) / 2}
+                  y={midY + 2}
+                  text-anchor="middle"
+                  fill={theme.edgeLabelText}
+                  font-family={theme.font}
+                  font-size={theme.fontSize - 2}
+                >
+                  {e.label}
+                </text>
+              </g>
+            )}
+          </g>
+        );
+      })}
+
+      {/* Nodes */}
+      {nodes.map((n) => {
+        const isLeaf = !n.children || n.children.length === 0;
+        return (
+          <g>
+            <rect
+              x={n.x}
+              y={n.y}
+              width={n.w}
+              height={n.h}
+              rx={theme.radius}
+              fill={theme.nodeFill}
+              stroke={isLeaf ? theme.accentBorder : theme.nodeBorder}
+              stroke-width={isLeaf ? "1.5" : "1"}
+              filter="url(#shadow)"
+            />
+            {/* Subtle inner highlight (top edge) */}
+            <line
+              x1={n.x + theme.radius}
+              y1={n.y + 1}
+              x2={n.x + n.w - theme.radius}
+              y2={n.y + 1}
+              stroke="rgba(255,255,255,0.06)"
+              stroke-width="1"
+            />
+            {n.lines.map((line, i) => (
+              <text
+                x={n.cx}
+                y={n.y + NODE_PAD_Y + i * LINE_HEIGHT + 12}
+                text-anchor="middle"
+                fill={theme.nodeText}
+                font-family={theme.font}
+                font-size={theme.fontSize}
+                font-weight="500"
+              >
+                {line}
+              </text>
+            ))}
+            {n.subtitle && n.subtitle.map((line, i) => (
+              <text
+                x={n.cx}
+                y={n.y + NODE_PAD_Y + (n.lines.length + i) * LINE_HEIGHT + 12}
+                text-anchor="middle"
+                fill={theme.nodeSubtext}
+                font-family={theme.font}
+                font-size={theme.fontSize - 1}
+              >
+                {line}
+              </text>
+            ))}
+          </g>
+        );
+      })}
+    </g>
+  </svg>
+</div>
+
+<style>
+  .graph-diagram {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+</style>
