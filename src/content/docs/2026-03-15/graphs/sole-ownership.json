@@ -1,0 +1,19 @@
+{
+  "label": "Needs heap or\\nrecursive struct?",
+  "children": [
+    { "edge": "Yes", "node": { "label": "Box<T>", "subtitle": "one owner, lives on heap" } },
+    { "edge": "No", "node": {
+      "label": "Need interior\\nmutability?",
+      "children": [
+        { "edge": "No", "node": { "label": "Plain T", "subtitle": "stack value, one owner" } },
+        { "edge": "Yes", "node": {
+          "label": "T is a primitive?",
+          "children": [
+            { "edge": "Yes", "node": { "label": "Cell<T>", "subtitle": "cheap, no borrow overhead" } },
+            { "edge": "No", "node": { "label": "RefCell<T>", "subtitle": "borrow-checked at runtime" } }
+          ]
+        }}
+      ]
+    }}
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "label": "Concrete type known\\nat compile time?",
+  "children": [
+    { "edge": "No", "node": { "label": "Box<dyn Trait>", "subtitle": "type only known at runtime" } },
+    { "edge": "Yes", "node": {
+      "label": "Single clear owner?",
+      "children": [
+        { "edge": "No", "node": { "label": "Shared ownership", "subtitle": "see below" } },
+        { "edge": "Yes", "node": { "label": "Sole owner", "subtitle": "see below" } }
+      ]
+    }}
+  ]
+}

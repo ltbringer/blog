@@ -1,0 +1,19 @@
+{
+  "label": "Need to mutate?",
+  "children": [
+    { "edge": "No", "node": {
+      "label": "Multiple threads?",
+      "children": [
+        { "edge": "No", "node": { "label": "Rc<T>" } },
+        { "edge": "Yes", "node": { "label": "Arc<T>" } }
+      ]
+    }},
+    { "edge": "Yes", "node": {
+      "label": "Multiple threads?",
+      "children": [
+        { "edge": "No", "node": { "label": "Rc<RefCell<T>>" } },
+        { "edge": "Yes", "node": { "label": "Arc<Mutex<T>>" } }
+      ]
+    }}
+  ]
+}

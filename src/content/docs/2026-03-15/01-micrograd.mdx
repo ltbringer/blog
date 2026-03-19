@@ -1,0 +1,89 @@
+---
+title: "Rebuilding micrograd in Rust - Introduction"
+description: "A multi-part devlog series documenting the process of porting Karpathy's micrograd from Python to Rust."
+template: splash
+---
+import {Aside} from '@astrojs/starlight/components';
+
+import Graph from '../../../components/Graph.astro';
+import sharedOwnership from './graphs/shared-ownership.json';
+import soleOwnership from './graphs/sole-ownership.json';
+import typeOwnership from './graphs/type-ownership.json';
+
+export const micrograd = <a href="https://github.com/karpathy/micrograd">micrograd</a>;
+
+
+## Introduction
+
+Karpathy's {micrograd} teaches backpropagation in 150 lines of python code. To build a foundation in interpretability of LLMs I
+found [this lecture](https://www.youtube.com/watch?v=VMj-3S1tku0) a strong starting point.
+
+After working through the material I had the following questions:
+
+1. How is the Neural net represented in memory? How are dependencies tracked during the forward pass?
+  and during backpropagation, how are the dependencies inverted?
+2. {micrograd} for simplicity targets `batch_size=1`. What do production grade
+  deep learning libraries do to maximize hardware utilization?
+3. How do these deeply nested data structures maintain ownership of their dependents?
+4. How do closures store and retain gradients across iterations and epochs?
+5. What's the scope of parallel weight updates? What sort of challenges exist in practice?
+6. How does CUDA impact training? CUDA is a blackbox for matrix multiplication using GPUs. If that's all, then can't we write a small kernel for weight updates?
+
+I had to write and extend {micrograd}. I selected Rust because it forces me to be intentional about ownership at every step.
+Python -> CPython -> C/C++ would offer better initial velocity which my mind would misunderstand as proficiency.
+
+## Smart Pointers
+
+[Primer](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html) | Given the number of options I needed a mental model to map smart pointers to use-cases.
+
+<Graph tree={typeOwnership}/>
+
+### Shared Ownership
+<Graph tree={sharedOwnership}/>
+
+### Sole Ownership
+<Graph tree={soleOwnership}/>
+
+Micrograd nodes need to update weights and gradients. This narrows our choice down to `Rc<RefCell<T>>`. I will consider
+`Arc<Mutex<T>>` when parallel computation becomes a priority.
+
+## Traits
+
+[Primer](https://doc.rust-lang.org/book/ch10-02-traits.html) | Rust defines shared behaviour through Traits. We need to
+implement add, multiply and activation functions that can be applied to a struct.
+
+## Back Function
+
+Each operation needs a closure to capture the gradients during forward pass and apply updates during backprop. These closures are:
+
+1. Dynamic functions assigned at runtime - stored on the heap.
+2. Mutate the values they own.
+
+We need to use a `Box` smart pointer here because:
+1. In a single threaded autograd, a back function can only be owned by a single node.
+2. The type is not known at compile time, we only know the function should have a trait `FnMut` i.e. a function that can mutate its members.
+
+## Kahn's Topological Sort
+
+<Aside type="note">
+Topological sort is essential to implementing backpropagation. Gradients must flow in the reverse topological order. This
+is necessary because a node's gradient must accumulate all the contributions from downstream nodes before its backward function runs.
+**We would be in direct violation of the chain rule.**
+</Aside>
+
+Micrograd implements a topological sort using recursive DFS. Recursive algorithms risk stack overflow on deep graphs.
+Kahn's topological sort is a standard method to flatten a DAG in the order of dependencies iteratively.
+
+1. Calculate the indegrees of each node in the graph: `HashMap<Node, Indegree>` where $type(Indegree)=u32$.
+2. Seed a queue with nodes where indegree==0.
+3. Create a `result: Vec<T>` to store the topological sort.
+4. While the queue has nodes
+    1. popleft a node and push into `result` where $T=type(node)$.
+    2. For each child of the node.
+        1. Update indegree to $n-1$ where $n=\textbf{current indegree}$.
+        2. If indegree==0 then push to queue
+5. Return `result`.
+
+With these components we can simulate a neural network with a few layers.
+
+Next: Building neural network primitives for ugrad.
