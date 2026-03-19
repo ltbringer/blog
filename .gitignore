@@ -20,3 +20,9 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 .idea/
+# beautiful-mermaid local deps
+scripts/beautiful-mermaid/node_modules/
+scripts/beautiful-mermaid/rust-ownership-flowchart.svg
+
+# Claude Code config
+.claude/
