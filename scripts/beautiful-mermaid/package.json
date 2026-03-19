@@ -1,0 +1,9 @@
+{
+  "name": "beautiful-mermaid",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "@mermaid-js/mermaid-cli": "^11.12.0"
+  }
+}
